@@ -1,10 +1,11 @@
 html,
-body {
+.container-access {
     height: 100%;
     width: 100%;
 }
 
-body {
+.container-access {
+    text-align: center;
     display: flex;
     align-items: center;
     padding-top: 40px;

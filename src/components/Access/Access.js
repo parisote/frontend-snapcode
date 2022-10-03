@@ -1,10 +1,10 @@
 import React from 'react'
 
-import './style.css'
+import './styles/Access.css'
 
 const Access = () => {
   return (
-    <body className="text-center">
+    <body className="container-access">
 
       <main className="form-signin w-100 m-auto">
         <form>
