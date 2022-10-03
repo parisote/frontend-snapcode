@@ -2,7 +2,12 @@ import React from 'react'
 
 import './styles/Access.css'
 
-const Access = () => {
+const Access = (props) => {
+
+  const submit = () => {
+    props.handleLogin()
+  }
+
   return (
     <body className="container-access">
 
@@ -24,7 +29,7 @@ const Access = () => {
                 <input type="checkbox" value="remember-me" /> Remember me
               </label>
             </div>
-            <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            <button onClick={submit} className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
         </form>
       </main>
 

@@ -5,9 +5,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-function NavigationBar() {
+function NavigationBar(props) {
 
-    
+
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
             <Container fluid>
@@ -43,7 +43,7 @@ function NavigationBar() {
                                 <Dropdown.Menu variant="dark">
                                     <Dropdown.Item eventKey="2" href="/profile">Profile</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item eventKey="2">Log out</Dropdown.Item>
+                                    <Dropdown.Item eventKey="2" onClick={() => props.handleLogout()} >Log out</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
 

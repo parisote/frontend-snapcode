@@ -7,25 +7,30 @@ import Profile from './components/Profile'
 import Trending from './components/Trending'
 import Home from "./components/Feed"
 
-
 function App() {
+
   const navigate = useNavigate();
 
-  const redirect = (path) => {
-        navigate(path);
+  const [isAuth, setIsAuth] = useState(false)
+
+  const checkAuth = () => {
+    if (!isAuth) {
+      navigate("/access")
+    }
+    if (window.location.pathname == "/access" && isAuth) {
+      navigate("/feed")
+    }
+
   }
 
-  const [isAuth, setIsAuth] = useState(true)
-
-  const checkAuth = () => {   
+  const handleLogin = () => {
     setIsAuth(true)
-    if (!isAuth) {
-      redirect("/access")
-    } 
-    if (window.location.pathname == "/access" && isAuth){
-      redirect("/feed")
-    }
-    
+    navigate("/feed")
+  }
+
+  const handleLogout = () =>{
+    setIsAuth(false)
+    navigate("/access")
   }
 
   useEffect(() => {
@@ -34,18 +39,18 @@ function App() {
 
 
   return (
-    <div>
-      <div>
-        {isAuth ? <NavigationBar /> : <></>}
-      </div>
-      <Routes>
-        <Route path="/feed" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/trending" element={<Trending />} />
-        <Route path="/access" element={<Access />} />
-        
-      </Routes>
-    </div>
+    <>
+        <div>
+          {isAuth ? <NavigationBar handleLogout={handleLogout} /> : <></>}
+        </div>
+        <Routes>
+          <Route path="/feed" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/trending" element={<Trending />} />
+          <Route path="/access" element={<Access handleLogin={handleLogin}/>} />
+
+        </Routes>
+    </>
   )
 }
 
