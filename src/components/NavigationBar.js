@@ -4,7 +4,6 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
-import {BasicExample} from '../components/Register'
 
 function NavigationBar() {
     return (
@@ -38,7 +37,7 @@ function NavigationBar() {
                             <Nav.Link href="../Register"> Register </Nav.Link>
                             <Dropdown drop='down' align={{ lg: 'end' }} >
                                 <Dropdown.Toggle id="user-menu" variant="black text-white">
-                                    <img className='rounded-circle me-2' src='https://i1.sndcdn.com/avatars-000138404358-sdp2xr-t500x500.jpg' style={{ maxHeight: '50px' }} ></img>
+                                    <img alt= "img1" className='rounded-circle me-2' src='https://i1.sndcdn.com/avatars-000138404358-sdp2xr-t500x500.jpg' style={{ maxHeight: '50px' }} ></img>
                                 </Dropdown.Toggle>
 
 

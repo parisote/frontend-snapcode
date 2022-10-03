@@ -4,9 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
-  Link,
-  NavLink
+  Route
 } from "react-router-dom";
 import Register from "./components/Register"
 import Home from "./components/Home"
@@ -17,6 +15,7 @@ function App() {
       <div>
         <NavigationBar />
       </div>
+      
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route exact path="/Register" element={<Register/>}/>        
