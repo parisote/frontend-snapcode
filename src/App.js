@@ -1,11 +1,15 @@
 import React from 'react'
-import NavigationBar from './components/NavigationBar'
+import Main from './Main'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
     <div>
-      <NavigationBar />
+      <meta charset="utf-8" />
+      <meta name="viewport"
+        content="width=device-width, 
+                   initial-scale=1" />
+      <Main />
     </div>
   )
 }
