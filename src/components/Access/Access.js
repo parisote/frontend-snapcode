@@ -2,7 +2,7 @@ import React, {useRef, useContext, useState} from 'react'
 import AuthContext from '../../context/Auth-context';
 import './styles/Access.css'
 
-const Access = () => {
+const Access = (props) => {
   const ctx = useContext(AuthContext)
   const usernameRef = useRef(null)
   const passwordRef = useRef(null)
@@ -17,7 +17,12 @@ const Access = () => {
       return
     }
     const body = {username, password}
-    ctx.onLogin(body)
+    let response = ctx.onLogin(body)
+    if (response.auth) {
+      props.redirectToFeed()
+    } else {
+      alert("invalid credentials")
+    }
   }
 
   return (

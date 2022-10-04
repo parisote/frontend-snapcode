@@ -6,8 +6,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
 import AuthContext from '../context/Auth-context';
 
-function NavigationBar() {
+function NavigationBar(props) {
     const ctx = useContext(AuthContext)
+
+    const handleLogout = (event) =>{
+        ctx.onLogout()
+        props.redirectToAccess()
+      }
 
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
@@ -44,7 +49,7 @@ function NavigationBar() {
                                 <Dropdown.Menu variant="dark">
                                     <Dropdown.Item eventKey="2" href="/profile">Profile</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item eventKey="2">Log out</Dropdown.Item>
+                                    <Dropdown.Item onClick={handleLogout} eventKey="2">Log out</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
 

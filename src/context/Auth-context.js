@@ -19,6 +19,7 @@ export const AuthContextProvider = (props) => {
         setUserId(userId)
         setToken(token)
         localStorage.setItem("auth", JSON.stringify({ userId, token }))
+        return {auth: true}
     }
 
     const logoutHandler = () => {

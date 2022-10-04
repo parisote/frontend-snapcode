@@ -18,21 +18,29 @@ function App() {
       ctx.userId = auth.userId
       ctx.token = auth.token
     } else {
-      navigate("/access")
+      redirectToAccess()
     }
   }, [])
+
+  const redirectToFeed = () =>{
+    navigate("/feed")
+  }
+
+  const redirectToAccess = () =>{
+    navigate("/access")
+  }
 
   return (
     <>
       <div>
-         <NavigationBar />
+         <NavigationBar redirectToAccess={redirectToAccess}/>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/feed" />} />
+        <Route path="/" element={<Navigate to="/feed"/>} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/trending" element={<Trending />} />
-        <Route path="/access" element={<Access />} />
+        <Route path="/access" element={<Access redirectToFeed={redirectToFeed}/>} />
       </Routes>
     </>
   )
