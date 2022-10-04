@@ -12,17 +12,20 @@ function App() {
 
   const navigate = useNavigate();
 
-  useEffect(
-    () => {
-      if (!ctx.token){
-        navigate("/access")
-      }
-    }, [])
+  useEffect(() => {
+    const auth = JSON.parse(localStorage.getItem("auth"))
+    if (auth) {
+      ctx.userId = auth.userId
+      ctx.token = auth.token
+    } else {
+      navigate("/access")
+    }
+  }, [])
 
   return (
     <>
       <div>
-        {ctx.token? <NavigationBar /> : <></>}
+         <NavigationBar />
       </div>
       <Routes>
         <Route path="/" element={<Navigate to="/feed" />} />
