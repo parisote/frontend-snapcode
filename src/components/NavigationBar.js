@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
+import AuthContext from '../context/Auth-context';
 
-function NavigationBar(props) {
-
+function NavigationBar() {
+    const ctx = useContext(AuthContext)
 
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
@@ -33,17 +34,17 @@ function NavigationBar(props) {
                     </Nav>
                     <Nav>
                         <div className="d-flex align-items-center text-white text-decoration-none">
-                 
+
                             <Dropdown drop='down' align={{ lg: 'end' }} >
                                 <Dropdown.Toggle id="user-menu" variant="black text-white">
-                                    <img alt= "img1" className='rounded-circle me-2' src='https://i1.sndcdn.com/avatars-000138404358-sdp2xr-t500x500.jpg' style={{ maxHeight: '50px' }} ></img>
+                                    <img alt="img1" className='rounded-circle me-2' src='https://i1.sndcdn.com/avatars-000138404358-sdp2xr-t500x500.jpg' style={{ maxHeight: '50px' }} ></img>
                                 </Dropdown.Toggle>
 
 
                                 <Dropdown.Menu variant="dark">
                                     <Dropdown.Item eventKey="2" href="/profile">Profile</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item eventKey="2" onClick={() => props.handleLogout()} >Log out</Dropdown.Item>
+                                    <Dropdown.Item eventKey="2">Log out</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
 
