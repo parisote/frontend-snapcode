@@ -2,10 +2,10 @@ import React, { useContext, useEffect } from 'react'
 import NavigationBar from './components/NavigationBar'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import Access from "./components/Access/Access"
-import Profile from './components/Profile'
-import Trending from './components/Trending'
-import Feed from "./components/Feed"
+import Access from "./pages/Access"
+import Profile from './pages/Profile'
+import Trending from './pages/Trending'
+import Feed from "./pages/Feed"
 import AuthContext from './context/Auth-context';
 function App() {
   const ctx = useContext(AuthContext)
@@ -30,7 +30,7 @@ function App() {
     navigate("/access")
   }
 
-  return (
+return (
     <>
       <div>
          <NavigationBar redirectToAccess={redirectToAccess}/>
