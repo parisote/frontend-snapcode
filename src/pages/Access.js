@@ -1,6 +1,6 @@
 import React, {useRef, useContext, useState} from 'react'
-import AuthContext from '../../context/Auth-context';
-import './styles/Access.css'
+import AuthContext from '../context/Auth-context';
+import '../styles/Access.css'
 
 const Access = (props) => {
   const ctx = useContext(AuthContext)
@@ -30,7 +30,6 @@ const Access = (props) => {
       <main className="form-signin w-100 m-auto">
         <form>
           <h1 className="h3 mb-3 fw-normal">Sign in</h1>
-
           <div className="form-floating">
             <input ref={usernameRef} type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
             <label for="floatingInput">Username or email</label>
