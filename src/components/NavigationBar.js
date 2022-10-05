@@ -11,7 +11,7 @@ function NavigationBar(props) {
 
     const handleLogout = (event) =>{
         ctx.onLogout()
-        props.redirectToAccess()
+        props.redirectToLogin()
       }
 
     return (

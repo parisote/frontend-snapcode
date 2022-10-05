@@ -2,12 +2,12 @@ import apiClient from "./apiClient";
 
 const AuthService = {
     login: async (body) => {
-        const { data } = await apiClient.post('path', body)
-        return data
+        const { response } = await apiClient.post('api/auth/login', body)
+        return response
     },
     register: async (body) => {
-        const { data } = await apiClient.post('path', body)
-        return data
+        const { response } = await apiClient.post('path', body)
+        return response
     }
 }
 
