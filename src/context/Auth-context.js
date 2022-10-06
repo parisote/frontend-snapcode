@@ -26,12 +26,12 @@ export const AuthContextProvider = (props) => {
 
     const loginHandler = async (body) => {
         const response = await authService.login(body)
-        if (response.status != 200) {
+        if (response.status !== 200) {
             return { auth: false }
         }
-        localStorage.setItem("auth", JSON.stringify({ userId: 1, token: response.token }))
-        setUserId(1)
-        setToken(token)
+        localStorage.setItem("auth", JSON.stringify({ userId: response.user.id, token: response.token }))
+        setUserId(response.user.id)
+        setToken(response.token)
         return { auth: true }
     }
 

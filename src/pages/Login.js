@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import AuthContext from '../context/Auth-context';
 import '../styles/Access.css'
 
@@ -8,19 +8,18 @@ const Login = (props) => {
   const [username, setUsername] = useState(null)
   const [password, setPassword] = useState(null)
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     if (!username || !password) {
       alert("Must enter username and password")
       return
     }
-    console.log(username, password)
     const body = { username, password }
-    let response = ctx.onLogin(body)
+    let response = await ctx.onLogin(body)
     if (response.auth) {
       props.redirectToFeed()
     } else {
-      alert("invalid credentials")
+      alert("Incorrect email or password")
     }
   }
 
