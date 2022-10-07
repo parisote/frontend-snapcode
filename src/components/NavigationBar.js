@@ -45,7 +45,6 @@ function NavigationBar(props) {
                                     <img alt="img1" className='rounded-circle me-2' src='https://i1.sndcdn.com/avatars-000138404358-sdp2xr-t500x500.jpg' style={{ maxHeight: '50px' }} ></img>
                                 </Dropdown.Toggle>
 
-
                                 <Dropdown.Menu variant="dark">
                                     <Dropdown.Item eventKey="2" href="/profile">Profile</Dropdown.Item>
                                     <Dropdown.Divider />

@@ -1,9 +1,12 @@
 import React from 'react'
+import PostEditor from '../components/PostEditor';
 
 const Home = () => {
+
   return (
-    
-    <h1>FEED</h1>
+      <div>
+         <PostEditor/>
+      </div>
  
   );
 }
