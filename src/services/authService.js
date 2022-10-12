@@ -11,12 +11,13 @@ const AuthService = {
         }
         
     },
-    register: async (body) => {
+    register: async (email, password) => {
         try {
-            const response = await apiClient.post('api/auth/register', body)
+            const response = await apiClient.post('api/auth/register', {email: email, password: password})
+            console.log(response)
             return response
         } catch (error) {
-            return error
+            return {status: error.response.status}
         }
         
     }

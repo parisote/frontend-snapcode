@@ -3,6 +3,7 @@ import NavigationBar from './components/NavigationBar'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Login from "./pages/Login"
+import Register from "./pages/Register"
 import Profile from './pages/Profile'
 import Trending from './pages/Trending'
 import Feed from "./pages/Feed"
@@ -12,13 +13,13 @@ function App() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /*useEffect(() => {
     let isAuth = ctx.isAuth()
     if (!isAuth) {
       redirectToLogin()
-    }
+    } 
   }, [])
-
+  */
   const redirectToFeed = () =>{
     navigate("/feed")
   }
@@ -30,7 +31,7 @@ function App() {
 return (
     <>
       <div>
-         <NavigationBar redirectToLogin={redirectToLogin}/>
+        <NavigationBar redirectToLogin={redirectToLogin}/>
       </div>
       <Routes>
         <Route path="/" element={<Navigate to="/feed"/>} />
@@ -38,6 +39,7 @@ return (
         <Route path="/profile" element={<Profile />} />
         <Route path="/trending" element={<Trending />} />
         <Route path="/login" element={<Login redirectToFeed={redirectToFeed}/>} />
+        <Route path="/register" element={<Register redirectToLogin={redirectToLogin}/>} />
       </Routes>
     </>
   )
