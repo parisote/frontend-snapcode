@@ -5,30 +5,37 @@ import '../styles/Access.css'
 const Login = (props) => {
   const ctx = useContext(AuthContext)
 
-  const [username, setUsername] = useState(null)
+  const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
+  const [error, setError] = useState(false)
+  const [errorMsj, setErrorMsj] = useState()
+
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!username || !password) {
-      alert("Must enter username and password")
+    if (!email || !password) {
+      handleError("Must enter email and password")
       return
     }
-    const body = { username, password }
-    let response = await ctx.onLogin(body)
-    if (response.auth) {
-      props.redirectToFeed()
-    } else {
-      alert("Incorrect email or password")
-    }
+    const isAuth = await ctx.onLogin({email, password})
+    if (!isAuth) {
+      handleError("Incorrect email or password")
+      return
+    } 
+    props.redirectToFeed()
   }
 
-  function handleUsernameChange(event) {
-    setUsername(event.target.value)
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value.trim())
   }
 
-  function handlePasswordChange(event) {
+  const handlePasswordChange = (event) => {
     setPassword(event.target.value)
+  }
+
+  const handleError = (error) => {
+    setErrorMsj(error)
+    setError(true)
   }
 
   return (
@@ -37,8 +44,8 @@ const Login = (props) => {
         <form>
           <h1 className="h3 mb-3 fw-normal">Sign in</h1>
           <div className="form-floating">
-            <input onChange={handleUsernameChange} type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-            <label for="floatingInput">Username or email</label>
+            <input onChange={handleEmailChange} type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+            <label for="floatingInput">Email</label>
           </div>
           <div className="form-floating">
             <input onChange={handlePasswordChange} type="password" className="form-control" id="floatingPassword" placeholder="Password" />
@@ -47,11 +54,12 @@ const Login = (props) => {
 
           <div className="checkbox mb-3">
             <label>
-              <input type="checkbox" value="remember-me" /> Remember me
+              <input type="checkbox" value="remember-me" /> <span>Remember me</span>
             </label>
           </div>
           <button onClick={handleSubmit} className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
         </form>
+        {error? <div class="alert alert-danger mt-3" role="alert"> {errorMsj} </div> : <></>}
       </main>
     </body>
   )
