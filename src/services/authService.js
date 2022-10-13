@@ -7,7 +7,7 @@ const AuthService = {
             console.log(response)
             return response
         } catch (error) {
-            return {status: error.response.status}
+            return {status: error.response.status, message: error.message}
         }
         
     },
