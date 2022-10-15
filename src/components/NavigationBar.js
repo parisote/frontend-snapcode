@@ -9,10 +9,10 @@ import AuthContext from '../context/Auth-context';
 function NavigationBar(props) {
     const ctx = useContext(AuthContext)
 
-    const handleLogout = (event) =>{
+    const handleLogout = (event) => {
         ctx.onLogout()
         props.redirectToLogin()
-      }
+    }
 
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
@@ -42,7 +42,7 @@ function NavigationBar(props) {
 
                             <Dropdown drop='down' align={{ lg: 'end' }} >
                                 <Dropdown.Toggle id="user-menu" variant="black text-white">
-                                    <img alt="img1" className='rounded-circle me-2' src='https://i1.sndcdn.com/avatars-000138404358-sdp2xr-t500x500.jpg' style={{ maxHeight: '50px' }} ></img>
+                                    <img alt="img1" className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '50px' }} ></img>
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu variant="dark">
