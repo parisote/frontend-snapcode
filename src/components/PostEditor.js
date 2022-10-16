@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Row  from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import { postApi } from '../services/apiClient';
 
 
 
@@ -27,19 +28,19 @@ function PostEditor(props) {
 //Ocultar boton POST cuando es modo vista
 //Editor no habilitado cuando es modo vista
   return (
-    <div className="square border rounded-end rounded-start col-md-6 m-1 mx-auto text-white border-secondary">
+    <div className="square border rounded-end rounded-start m-1 mx-auto text-white border-secondary">
     <Form className="mx-auto">
       <Row className="me-1 p-1 mx-auto">
         <Form.Group as={Row}  controlId="formPostBar">
-          <Col sm={12} className="p-1"> <Form.Control as="textarea" className='bg-dark text-white square border-secondary' rows={2} style={{fontSize: 11}} placeholder="Enter Title Here" size="sm"/> </Col>
-          <Col sm={12} className="p-1"> <Form.Control as="textarea" className='bg-dark text-white border-secondary' rows={2} style={{fontSize: 11}} placeholder="Enter Tags" size="sm"/></Col>
-          <span sm={12} className="p-1"><Col sm={4}> <Form.Control type="text"  className='bg-dark text-white border-secondary' style={{fontSize: 11}} placeholder="Enter file name" size="sm"/> </Col></span>
+          <Col sm={12} className="p-1"> <Form.Control as="textarea" id="text" className='bg-dark text-white square border-secondary' rows={2} style={{fontSize: 11}} placeholder="Enter Title Here" size="sm"/> </Col>
+          <Col sm={12} className="p-1"> <Form.Control as="textarea" id="tags"className='bg-dark text-white border-secondary' rows={2} style={{fontSize: 11}} placeholder="Enter Tags" size="sm"/></Col>
+          <span sm={12} className="p-1"><Col sm={4}> <Form.Control id="filaName" type="text"  className='bg-dark text-white border-secondary' style={{fontSize: 11}} placeholder="Enter file name" size="sm"/> </Col></span>
         </Form.Group>
       </Row>
       <Row className="me-1 p-1 mx-auto">
         <Form.Group controlId="formEditor">
             <Col sm={12} className="">
-              <Editor
+              <Editor id='monacoEditor'
                 defaultLanguage='c#'
                 height="20vh"
                 theme="vs-dark"

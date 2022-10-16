@@ -1,10 +1,11 @@
 import axios from "axios";
 require('dotenv').config()
 
-const baseURL= "http://localhost:${PORT}/api/"
+const PORT = process.env.REACT_APP_API_PORT
+const baseURL= "http://localhost:" + PORT + "/api/"
 // TODO: Implementar .env 
 
-const PORT = process.env.REACT_APP_API_PORT
+
 const apiClient = axios.create({baseURL: baseURL})
 
 export const userApi = axios.create({
