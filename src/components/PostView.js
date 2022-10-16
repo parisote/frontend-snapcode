@@ -1,93 +1,89 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import AuthContext from '../context/Auth-context';
-import ReactDOM from "react-dom";
-import Editor from "@monaco-editor/react";
-
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-
-
+import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
+import themeData from '../utils/monacoConfigs'
 
 function PostView(props) {
   const ctx = useContext(AuthContext)
-  const user = {
-    id: 1,
-    email: "test@gmail.com",
-    password: "clave123",
-    //relations
+
+  function handleEditorChange(value, event) {
+    // here is the current value
   }
 
-  const exmpcode = {
-    id: 1,
-    value: "codigo de prueba",
-    language: "JavaScript",
-    postId: 1
+  function handleEditorDidMount(editor, monaco) {
+    console.log("onMount: the editor instance:", editor);
+    console.log("onMount: the monaco instance:", monaco)
+    monaco.editor.defineTheme('my-theme', themeData);
+    monaco.editor.setTheme('my-theme')
   }
 
-  const comment = {
-    id: 1,
-    text: "comentario de prueba",
-    imgUrl: "testurl",
-    likedBy: user,
-    postId: 1,
-    author: user,
-    authorId: user.id,
+  function handleEditorWillMount(monaco) {
+    console.log("beforeMount: the monaco instance:", monaco);
   }
 
-  const post = {
-    id: 1,
-    createdAt: "20221011",
-    updatedAt: "20221011",
-    code: exmpcode,
-    text: "prueba",
-    imgageUrl: "test",
-    videoUrl: "test",
-    tags: "#hola",
-    commentaries: comment,
-    author: user,
-    likedBy: user,
+  function handleEditorValidation(markers) {
+    // model markers
+    // markers.forEach(marker => console.log('onValidate:', marker.message));
   }
-
-  const copyPost = (event) => {
-    alert("Copy")
-    return
-  }
-  //Ocultar boton POST cuando es modo vista
-  //Editor no habilitado cuando es modo vista
 
   return (
-    <div className="rounded-end rounded-start mx-auto" >
-      <Form className="mx-auto bg-black">
-        <Row className="me-1 mx-auto" >
-          <Form.Group as={Row} controlId="formPostBar">
-            <Form.Label column sm={2} size="sm" className='justify-content-start post'>{post.author.email}</Form.Label>
-            <Form.Label column sm={8} size="sm" className='justify-content-between postTitle'>{post.text}</Form.Label>
-            <Form.Label column sm={2} size="sm" className='justify-content-end'> {post.createdAt} </Form.Label>
-            <Form.Label column sm={12} size="sm" className='justify-content-start'> {post.tags} </Form.Label>
-          </Form.Group>
-        </Row>
-        <Row className="me-1 mx-auto">
-          <Form.Group controlId="formEditor">
-            <Col sm={12} className="">
-              <Editor
-                defaultLanguage='java'
-                value={post.code.value}
-                height="15vh"
-                theme="vs-dark"
-                options={{ readOnly: true }}
-              />
-            </Col>
-          </Form.Group>
-        </Row>
-        <Row className="me-1 p-1 mx-auto">
-          <Form.Label column sm={4} size="sm" className='justify-content-start'>{post.code.language}</Form.Label>
-          <Col sm={4} className='justify-content-end'> <Button onClick={copyPost} size="sm" variant="dark" type="submit">Likes</Button> </Col>
-          <Col sm={2} className='justify-content-end'> <Button onClick={copyPost} size="sm" variant="dark" type="submit">Comments</Button> </Col>
-          <Col sm={2} className='justify-content-end'> <Button onClick={copyPost} size="sm" variant="dark" type="submit">Copy</Button> </Col>
-        </Row>
-      </Form>
+    <div className='container-fluid text-white bg-black mt-3'>
+      <div className='row gx-0'>
+        <div className='d-flex'>
+          <img src={`https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg`} className='img-fluid rounded-circle' style={{ maxHeight: '40px' }}></img>
+          <p className='mx-1 mt-2 text-info'>
+            harushishi
+          </p>
+          <p className='mt-2 text-secondary'>/</p>
+          <p className='mx-1 mt-2 fw-bold text-info'>
+            Filename.ext
+          </p>
+          <p className='mx-1 fw-light fst-italic' style={{ fontSize: '0.8em', marginTop: '12px' }}>
+            15 Sept. 05:00AM
+          </p>
+        </div>
+        <div className='row gx-0'>
+          <div className='container mx-4'>
+            This is an example of a description of the following code :D
+            This is an example of a description of the following code :D
+          </div>
+          {/* {Props.img !== null &&
+            <img src={`https://vsa-bucket-test.s3.sa-east-1.amazonaws.com/${Props.img}`}
+              className='img-fluid mt-3' style={{ maxWidth: '600px' }}></img>
+          }
+          {Props.video !== null &&
+            <video controls width="600px" className='mt-3'>
+              <source src={``}
+                type="video/mp4" />
+              <source src={``}
+                type="video/webm" />
+              Sorry, your browser doesn't support embedded videos.
+            </video>
+          } */}
+        </div>
+        <div className='row gx-0 mt-2 border rounded border-secondary p-2' style={{ height: '25vh' }}>
+          <Editor
+            height="20vh"
+            defaultLanguage="javascript"
+            defaultValue="// some comment"
+            theme='my-theme'
+            options={{
+              minimap: {
+                enabled: false
+              },
+              scrollbar: {
+                vertical: 'hidden'
+              },
+              overviewRulerBorder: false
+            }}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+            beforeMount={handleEditorWillMount}
+            onValidate={handleEditorValidation}
+          />
+        </div>
+      </div>
+      <div className='border-bottom border-secondary mt-2'></div>
     </div>
   );
 }

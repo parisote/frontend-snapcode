@@ -13,7 +13,7 @@ const Profile = () => {
                 </div>
                 <div className="h-card col-md-7 mt-3">
                     <ProfileTopBar />
-                    {/* <PostView /> */}
+                    <PostView />
                 </div>
             </div>
         </div>

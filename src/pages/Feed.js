@@ -4,16 +4,16 @@ import PostEditor from '../components/PostEditor';
 const Home = () => {
 
 
-  return (
-      <div className="container-fluid">
+    return (
+        <div className="container-fluid">
             <div className="row min-vh-100">
                 <div className="col-12 bg-black border-end border-secondary">
-                    <PostView/>
+                    <PostEditor />
                 </div>
                 <div className="col bg-black  border-secondary"></div>
             </div>
-      </div>
-  );
+        </div>
+    );
 }
 
 export default Home;
