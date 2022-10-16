@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import authService from '../services/authService'
 
 const AuthContext = React.createContext({
     userId: null,
     token: null,
+    isAuth: () => { },
     onLogin: (body) => { },
     onLogout: () => { }
 })
@@ -12,14 +14,25 @@ export const AuthContextProvider = (props) => {
     const [userId, setUserId] = useState(null)
     const [token, setToken] = useState(null)
 
-    const loginHandler = (body) => {
-        //llama servicio login, devuelve token e id
-        let userId = 1
-        let token = "lajvoqwqaryall21sad12dasdkd12l"
-        setUserId(userId)
-        setToken(token)
-        localStorage.setItem("auth", JSON.stringify({ userId, token }))
-        return {auth: true}
+    const isAuth = () => {
+        const auth = JSON.parse(localStorage.getItem("auth"))
+        if (!auth) {
+            return false
+        }
+        setUserId(auth.userId)
+        setToken(auth.token)
+        return true
+    }
+
+    const loginHandler = async (body) => {
+        const response = await authService.login(body)
+        if (response.status !== 200) {
+            return false
+        }
+        localStorage.setItem("auth", JSON.stringify({ userId: response.data.user.id, token: response.data.token }))
+        setUserId(response.data.user.id)
+        setToken(response.data.token)
+        return true
     }
 
     const logoutHandler = () => {
@@ -31,6 +44,7 @@ export const AuthContextProvider = (props) => {
             value={{
                 userId: userId,
                 token: token,
+                isAuth: isAuth,
                 onLogin: loginHandler,
                 onLogout: logoutHandler
             }}>
