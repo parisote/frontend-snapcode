@@ -1,15 +1,20 @@
-import React, { useContext, useState } from 'react'
-import AuthContext from '../context/Auth-context';
+import React, { useState } from 'react'
+import useAuth from  '../hooks/useAuth'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import '../styles/Access.css'
 
 const Login = (props) => {
-  const ctx = useContext(AuthContext)
+  const ctx = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  let { from } = location.state || { from: { pathname: "/" } };
 
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
   const [error, setError] = useState(false)
   const [errorMsj, setErrorMsj] = useState()
-
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -22,10 +27,9 @@ const Login = (props) => {
       handleError("Incorrect email or password")
       return
     }
-    if (ctx.register === 2) {
-      
-    } 
-    props.redirectToFeed()
+    
+    navigate(from, { replace: true});
+    // props.redirectToFeed();
   }
 
   const handleEmailChange = (event) => {
