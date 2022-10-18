@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { useNavigate } from "react-router-dom"
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
@@ -6,12 +7,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
 import AuthContext from '../context/Auth-context';
 
-function NavigationBar(props) {
+function NavigationBar() {
     const ctx = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const handleLogout = (event) => {
         ctx.onLogout()
-        props.redirectToLogin()
+        navigate("/login")
     }
 
     return (

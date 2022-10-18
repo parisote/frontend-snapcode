@@ -1,5 +1,4 @@
 import React from 'react'
-import PostView from '../components/PostView';
 import PostEditor from '../components/PostEditor';
 const Home = () => {
 

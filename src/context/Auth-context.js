@@ -11,18 +11,23 @@ const AuthContext = React.createContext({
 
 export const AuthContextProvider = (props) => {
 
-    const [userId, setUserId] = useState(null)
-    const [token, setToken] = useState(null)
+    const [userId, setUserId] = useState(() => {
+        const auth = localStorage.getItem('auth')
 
-    const isAuth = () => {
-        const auth = JSON.parse(localStorage.getItem("auth"))
-        if (!auth) {
-            return false
-        }
-        setUserId(auth.userId)
-        setToken(auth.token)
-        return true
-    }
+        if (!auth) return null
+
+        return JSON.parse(localStorage.getItem('auth')).userId
+    })
+
+    const [token, setToken] = useState(() => {
+        const auth = localStorage.getItem('auth')
+
+        if (!auth) return null
+
+        return JSON.parse(localStorage.getItem('auth')).token
+    })
+
+    const isAuth = () => !!token
 
     const loginHandler = async (body) => {
         const response = await authService.login(body)
@@ -36,6 +41,8 @@ export const AuthContextProvider = (props) => {
     }
 
     const logoutHandler = () => {
+        setToken(null)
+        setUserId(null)
         localStorage.removeItem("auth")
     }
 

@@ -17,15 +17,11 @@ const Login = (props) => {
       handleError("Must enter email and password")
       return
     }
-    const isAuth = await ctx.onLogin({email, password})
+    const isAuth = await ctx.onLogin({ email, password })
     if (!isAuth) {
       handleError("Incorrect email or password")
       return
     }
-    if (ctx.register === 2) {
-      
-    } 
-    props.redirectToFeed()
   }
 
   const handleEmailChange = (event) => {
@@ -63,12 +59,12 @@ const Login = (props) => {
           <button onClick={handleSubmit} className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
           <div>
             New?&nbsp;
-            <a href="/Register"> 
+            <a href="/Register">
               Sign up
             </a>
           </div>
         </form>
-        {error? <div class="alert alert-danger mt-3" role="alert"> {errorMsj} </div> : <></>}
+        {error ? <div class="alert alert-danger mt-3" role="alert"> {errorMsj} </div> : <></>}
       </main>
     </body>
   )
