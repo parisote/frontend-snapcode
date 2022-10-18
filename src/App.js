@@ -7,6 +7,7 @@ import Register from "./pages/Register"
 import Profile from './pages/Profile'
 import Trending from './pages/Trending'
 import Feed from "./pages/Feed"
+import RequireAuth from './components/RequireAuth';
 import AuthContext from './context/Auth-context';
 function App() {
   const ctx = useContext(AuthContext)
@@ -34,12 +35,17 @@ return (
         <NavigationBar redirectToLogin={redirectToLogin}/>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/feed"/>} />
-        <Route path="/feed" element={<Feed />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/trending" element={<Trending />} />
+        {/* public routes */}
         <Route path="/login" element={<Login redirectToFeed={redirectToFeed}/>} />
         <Route path="/register" element={<Register redirectToLogin={redirectToLogin}/>} />
+        
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Navigate to="/feed"/>} />
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/trending" element={<Trending />} />
+        </Route>
       </Routes>
     </>
   )

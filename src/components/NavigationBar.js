@@ -1,13 +1,20 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
 import AuthContext from '../context/Auth-context';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import PostEditor from './PostEditor';
 
 function NavigationBar(props) {
     const ctx = useContext(AuthContext)
+    
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const handleLogout = (event) => {
         ctx.onLogout()
@@ -39,23 +46,37 @@ function NavigationBar(props) {
                     </Nav>
                     <Nav>
                         <div className="d-flex align-items-center text-white text-decoration-none">
-
+                            <Dropdown drop='down' align={{ lg: 'end' }} >
+                                <Dropdown.Toggle id="user-menu" variant="black text-white"  onClick={handleShow}>
+                                    Nuevo Post
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu variant="dark">
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                        <div className="d-flex align-items-center text-white text-decoration-none">
                             <Dropdown drop='down' align={{ lg: 'end' }} >
                                 <Dropdown.Toggle id="user-menu" variant="black text-white">
                                     <img alt="img1" className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '50px' }} ></img>
                                 </Dropdown.Toggle>
-
                                 <Dropdown.Menu variant="dark">
                                     <Dropdown.Item eventKey="2" href="/profile">Profile</Dropdown.Item>
                                     <Dropdown.Divider />
                                     <Dropdown.Item onClick={handleLogout} eventKey="2">Log out</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
-
                         </div>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
+            <Modal size="xl" show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+            <Modal.Header className="bg-dark text-white" closeButton>
+            <Modal.Title className="bg-dark  text-white" >NuevoPost</Modal.Title>
+            </Modal.Header>
+                <Modal.Body className="bg-dark  text-white">
+                <PostEditor/>
+                </Modal.Body>
+            </Modal>
         </Navbar>
     );
 }
