@@ -1,21 +1,16 @@
-import React, { useContext } from 'react'
-import AuthContext from '../context/Auth-context';
+import React from 'react'
+// import AuthContext from '../context/Auth-context';
 
 function ProfileBar(props) {
-  const ctx = useContext(AuthContext)
-
-  const followUser = (event) => {
-    alert("followUser")
-    return
-  }
+  // const ctx = useContext(AuthContext)
 
   //Ocultar boton POST cuando es modo vista
   //Editor no habilitado cuando es modo vista
 
   return (
-    <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-black  min-vh-100">
+    <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-black min-vh-100">
       <div className="d-flex text-white ">
-        <img className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ width: '90%', border: '2px solid #404040' }} ></img>
+        <img className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' alt='alt' style={{ width: '90%', border: '2px solid #404040' }} ></img>
       </div>
       <div className='fs-2 text-white mt-3'>
         {/* Full name */}

@@ -1,4 +1,5 @@
 //https://bitwiser.in/monaco-themes/
+//https://github.com/suren-atoyan/monaco-react#usemonaco
 
 const themeData = {
     "base": "vs-dark",
