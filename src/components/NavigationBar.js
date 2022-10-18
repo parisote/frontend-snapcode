@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useState ,useContext } from 'react'
 import { useNavigate } from "react-router-dom"
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -6,10 +6,16 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
 import AuthContext from '../context/Auth-context';
+import Modal from 'react-bootstrap/Modal';
+import PostEditor from './PostEditor';
 
 function NavigationBar() {
     const ctx = useContext(AuthContext)
     const navigate = useNavigate()
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const handleLogout = (event) => {
         ctx.onLogout()
@@ -41,6 +47,15 @@ function NavigationBar() {
                     </Nav>
                     <Nav>
                         <div className="d-flex align-items-center text-white text-decoration-none">
+                            <Dropdown drop='down' align={{ lg: 'end' }} >
+                                <Dropdown.Toggle id="user-menu" variant="black text-white"  onClick={handleShow}>
+                                    Nuevo Post
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu variant="dark">
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                        <div className="d-flex align-items-center text-white text-decoration-none">
 
                             <Dropdown drop='down' align={{ lg: 'end' }} >
                                 <Dropdown.Toggle id="user-menu" variant="black text-white">
@@ -58,6 +73,14 @@ function NavigationBar() {
                     </Nav>
                 </Navbar.Collapse>
             </Container>
+            <Modal size="xl" show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+            <Modal.Header className="bg-dark text-white" closeButton>
+            <Modal.Title className="bg-dark  text-white" >NuevoPost</Modal.Title>
+            </Modal.Header>
+                <Modal.Body className="bg-dark  text-white">
+                <PostEditor/>
+                </Modal.Body>
+            </Modal>
         </Navbar>
     );
 }
