@@ -1,6 +1,8 @@
 import React, { useState, useContext, useRef } from 'react'
 import AuthContext from '../context/Auth-context';
 import Editor from "@monaco-editor/react";
+import themeData from '../utils/monacoConfigs'
+
 
 import Form from 'react-bootstrap/Form';
 import Row  from 'react-bootstrap/Row';
@@ -17,10 +19,28 @@ function PostEditor(props) {
   const [fileName, setFileName] = useState(null)
   const monacoRef = useRef(null);
 
+ 
+  function handleEditorChange(value, event) {
+    // here is the current value
+  }
+
   function handleEditorDidMount(editor, monaco) {
+    // console.log("onMount: the editor instance:", editor);
+    // console.log("onMount: the monaco instance:", monaco)
+    monaco.current = editor; 
+    monaco.editor.defineTheme('my-theme', themeData);
+    monaco.editor.setTheme('my-theme')
     monacoRef.current = editor; 
   }
 
+  function handleEditorWillMount(monaco) {
+    // console.log("beforeMount: the monaco instance:", monaco);
+  }
+
+  function handleEditorValidation(markers) {
+    // model markers
+    // marke
+  }
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value.trim())
@@ -42,6 +62,7 @@ function PostEditor(props) {
   
   const handleSubmit = (event) =>
   {
+    alert (monacoRef.current.getValue())
     const newPost = {
         title: title,
         tags : tags,
@@ -69,8 +90,20 @@ function PostEditor(props) {
               <Editor id='monacoEditor'
                 defaultLanguage='c#'
                 height="20vh"
-                theme="vs-dark"
+                theme='my-theme'
+                options={{
+                  minimap: {
+                  enabled: false
+                },
+                scrollbar: {
+                  vertical: 'hidden'
+                },
+                overviewRulerBorder: false
+                }}
                 onMount={handleEditorDidMount}
+                onChange={handleEditorChange}
+                beforeMount={handleEditorWillMount}
+                onValidate={handleEditorValidation}
                 />
             </Col>
         </Form.Group>
