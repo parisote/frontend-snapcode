@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL= `https://${process.env.REACT_APP_URI}`
+const baseURL= `${process.env.REACT_APP_URI}`
 
 const apiClient = axios.create({baseURL: baseURL})
 
