@@ -28,8 +28,16 @@ function NavigationBar(id) {
         navigate("/login")
     }
 
+    const navigateHome = (event) => {
+        navigate("/home")
+    }
+
+    const navigateTrending = (event) => {
+        navigate("/trending")
+    }
+
     const navigateProfile = (event) => {
-        navigate("/profile", { state: { id: 5 } })
+        navigate("/profile", { state: { id: ctx.userId } })
     }
 
     useEffect(() => {
@@ -41,7 +49,7 @@ function NavigationBar(id) {
     const parseProfile = (res) => setProfile(res.data)
 
     if (!profile || !user) {
-        return <div>loading..</div>
+        return <div className='bg-dark min-vh-100'>loading</div>
     }
 
     return (
@@ -64,8 +72,8 @@ function NavigationBar(id) {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-                        <Nav.Link href="/feed"> Feed </Nav.Link>
-                        <Nav.Link href="/trending" >Trending</Nav.Link>
+                        <Nav.Link onClick={navigateHome}> Feed </Nav.Link>
+                        <Nav.Link onClick={navigateTrending}> Trending </Nav.Link>
                     </Nav>
                     <Nav>
                         <div className="d-flex align-items-center text-white text-decoration-none">

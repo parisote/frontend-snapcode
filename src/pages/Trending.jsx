@@ -1,14 +1,11 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { useLocation } from 'react-router-dom'
-import ProfileBar from '../components/ProfileBar';
+import React, { useContext, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom';
 import PostView from '../components/PostView';
-import ProfileTopBar from '../components/ProfileTopBar';
-import apiClient from '../services/apiClient';
 import AuthContext from '../context/Auth-context';
+import apiClient from '../services/apiClient';
 import { sortPosts } from '../utils/utilities';
+const Trending = () => {
 
-
-const Profile = () => {
     const ctx = useContext(AuthContext)
     const location = useLocation()
 
@@ -21,6 +18,18 @@ const Profile = () => {
         userId = ctx.userId
     } else {
         userId = location.state.id
+    }
+
+    const data = {
+        ...user,
+        ...profile,
+    }
+
+    const renderPosts = () => {
+        const sortedPosts = sortPosts(posts, 'date')
+        return (
+            <>{sortedPosts.map(post => (<PostView user={data} post={post} key={post.id} />))}</>
+        )
     }
 
     //esto y lo proximo deberia ir idealmente en un hook
@@ -38,36 +47,19 @@ const Profile = () => {
         return <div className='bg-dark min-vh-100'>loading</div>
     }
 
-    const data = {
-        ...user,
-        ...profile,
-    }
-
-    const renderPosts = () => {
-        const sortedPosts = sortPosts(posts, 'date')
-        return (
-            <>{sortedPosts.map(post => (<PostView user={data} post={post} key={post.id} />))}</>
-        )
-    }
-
     return (
         <div className="d-flex align-items-center justify-content-center bg-black text-light min-vh-100">
             <div className='d-flex align-items-start w-75 min-vh-100'>
-                <div className="col-md-1 mt-3">
+                <div className="col-md-2 mt-2">
                 </div>
-                <div className="col-md-3 mt-3">
-                    <ProfileBar {...data} />
-                </div>
-                <div className="h-card col-md-7 mt-3">
-                    <ProfileTopBar />
+                <div className="col-md-8 mt-8">
                     {renderPosts()}
-                    {/* {!posts && <p>loading...</p>}
-                    {posts && <p>hay posts</p>} */}
+                </div>
+                <div className="col-md-2 mt-2">
                 </div>
             </div>
         </div>
-    )
+    );
 }
-export default Profile;
 
-//
+export default Trending;
