@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 
 function Tag(props) {
 
+    console.log(props)
     const { text } = props
     let variant = ''
 
