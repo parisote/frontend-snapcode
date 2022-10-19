@@ -4,7 +4,7 @@ import Editor from "@monaco-editor/react";
 import themeData from '../utils/monacoConfigs'
 
 import Form from 'react-bootstrap/Form';
-import Row  from 'react-bootstrap/Row';
+import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import apiClient, { postApi } from '../services/apiClient';
@@ -16,14 +16,14 @@ function PostEditor(props) {
   const [tags, setTags] = useState(null)
   const [language, setLanguage] = useState(null)
   const [fileName, setFileName] = useState(null)
-  
+
   const [error, setError] = useState(false)
   const [errorMsj, setErrorMsj] = useState()
 
   const monacoRef = useRef(null);
-  
 
- 
+
+
   function handleEditorChange(value, event) {
     // here is the current value
   }
@@ -31,10 +31,10 @@ function PostEditor(props) {
   function handleEditorDidMount(editor, monaco) {
     // console.log("onMount: the editor instance:", editor);
     // console.log("onMount: the monaco instance:", monaco)
-    monaco.current = editor; 
+    monaco.current = editor;
     monaco.editor.defineTheme('my-theme', themeData);
     monaco.editor.setTheme('my-theme')
-    monacoRef.current = editor; 
+    monacoRef.current = editor;
   }
 
   function handleEditorWillMount(monaco) {
@@ -49,12 +49,10 @@ function PostEditor(props) {
   const handleTitleChange = (event) => {
     setTitle(event.target.value.trim())
   }
-  const handleTagsChange = (event) => 
-  {
+  const handleTagsChange = (event) => {
     setTags(event.target.value)
   }
-  const handleLanguageChange = (event) => 
-  {
+  const handleLanguageChange = (event) => {
     var index = event.target.selectedIndex;
     let lang = event.target[index].text
     setLanguage(lang);
@@ -64,57 +62,50 @@ function PostEditor(props) {
     });
   }
 
-  const handleFileNameChange = (event) => 
-  {
+  const handleFileNameChange = (event) => {
     setFileName(event.target.value)
   }
-  
-  const handleSubmit = async (event) =>
-  {
-    //alert (monacoRef.current.getValue())
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
     handleNoError()
-    let newError , errorActual
-    if (!title) 
-    {
+    let newError, errorActual
+    if (!title) {
       errorActual = " Debe poner un texto en el post"
-      newError = newError ? newError +" - " +errorActual :  errorActual
+      newError = newError ? newError + " - " + errorActual : errorActual
     }
-    
-    if(!monacoRef.current.getValue())
-    {
+
+    if (!monacoRef.current.getValue()) {
       errorActual = " Debe completar el post con codigo"
-      newError = newError ? newError +" - " +errorActual :  errorActual
+      newError = newError ? newError + " - " + errorActual : errorActual
     }
 
-    if(!language)
-    {
+    if (!language) {
       errorActual = " Debe seleccionar un lenguaje"
-      newError = newError ? newError +" - " + errorActual :  errorActual
+      newError = newError ? newError + " - " + errorActual : errorActual
     }
 
-    if (!newError)
-    {
+    if (!newError) {
       const newPost = {
         title: title,
-        tags : tags,
-        code:  monacoRef.current.getValue(),
+        tags: tags,
+        code: monacoRef.current.getValue(),
         fileName: fileName,
-        language : language,
+        language: language,
       }
 
-      let response = await postApi.post("/"+ctx.userId,newPost);
-      if (response.status === 201) 
-      {
-        return
-      } 
-      else 
-      {
+      let response = await postApi.post("/" + ctx.userId, newPost);
+      if (response.status === 201) {
+        console.log('201')
+        window.location.reload()
+      }
+
+      else {
         errorActual = "Error al crear POST"
-        newError = newError ? newError +" - " + errorActual :  errorActual
+        newError = newError ? newError + " - " + errorActual : errorActual
       }
     }
-    else
-    {
+    else {
       handleError(newError)
       event.preventDefault()
     }
@@ -132,16 +123,16 @@ function PostEditor(props) {
 
   return (
     <div className="square border rounded-end rounded-start m-1 mx-auto text-white border-secondary bg-dark">
-    <Form className="mx-auto">
-      <Row className="me-1 p-1 mx-auto">
-        <Form.Group as={Row}>
-          <Col sm={12} className="p-1"> <Form.Control as="textarea" onChange={handleTitleChange} id="text" className='bg-dark text-white square border-secondary' rows={2} style={{fontSize: 11}} placeholder="Enter Title Here" size="sm"/> </Col>
-          <Col sm={12} className="p-1"> <Form.Control as="textarea" onChange={handleTagsChange} id="tags"className='bg-dark text-white border-secondary' rows={2} style={{fontSize: 11}} placeholder="Enter Tags" size="sm"/></Col>
-          <span sm={12} className="p-1"><Col sm={4}> <Form.Control id="filaName" onChange={handleFileNameChange} type="text"  className='bg-dark text-white border-secondary' style={{fontSize: 11}} placeholder="Enter file name" size="sm"/> </Col></span>
-        </Form.Group>
-      </Row>
-      <Row className="me-1 p-1 mx-auto">
-        <Form.Group>
+      <Form className="mx-auto" onSubmit={handleSubmit} >
+        <Row className="me-1 p-1 mx-auto">
+          <Form.Group as={Row}>
+            <Col sm={12} className="p-1"> <Form.Control as="textarea" onChange={handleTitleChange} id="text" className='bg-dark text-white square border-secondary' rows={2} style={{ fontSize: 11 }} placeholder="Enter Title Here" size="sm" /> </Col>
+            <Col sm={12} className="p-1"> <Form.Control as="textarea" onChange={handleTagsChange} id="tags" className='bg-dark text-white border-secondary' rows={2} style={{ fontSize: 11 }} placeholder="Enter Tags" size="sm" /></Col>
+            <span sm={12} className="p-1"><Col sm={4}> <Form.Control id="filaName" onChange={handleFileNameChange} type="text" className='bg-dark text-white border-secondary' style={{ fontSize: 11 }} placeholder="Enter file name" size="sm" /> </Col></span>
+          </Form.Group>
+        </Row>
+        <Row className="me-1 p-1 mx-auto">
+          <Form.Group>
             <Col sm={12} className="">
               <Editor id='monacoEditor'
                 defaultLanguage='javascript'
@@ -149,33 +140,33 @@ function PostEditor(props) {
                 theme='my-theme'
                 options={{
                   minimap: {
-                  enabled: false
-                },
-                scrollbar: {
-                  vertical: 'hidden'
-                },
-                overviewRulerBorder: false
+                    enabled: false
+                  },
+                  scrollbar: {
+                    vertical: 'hidden'
+                  },
+                  overviewRulerBorder: false
                 }}
                 onMount={handleEditorDidMount}
                 onChange={handleEditorChange}
                 beforeMount={handleEditorWillMount}
                 onValidate={handleEditorValidation}
-                />
+              />
             </Col>
-        </Form.Group>
-      </Row>
-      <Row className="me-1 pt-1 pb-1 mx-auto">
-        <Form.Group as={Row}>
-          <Col sm={6} className='d-flex justify-content-start'>
-          <Form.Select onChange={handleLanguageChange} size="sm" className='bg-dark text-white border-secondary'>
-              <option>Select Language</option>
-              <option value='javaScript'>javaScript</option>
-              <option value='typeScript'>typeScript</option>
-              <option value='java'>java</option>
-              <option value='csharp'>csharp</option>
-              <option value='c'>c</option>
-              <option value='python'>python</option>
-              {/*<option value='abap'>abap</option>
+          </Form.Group>
+        </Row>
+        <Row className="me-1 pt-1 pb-1 mx-auto">
+          <Form.Group as={Row}>
+            <Col sm={6} className='d-flex justify-content-start'>
+              <Form.Select onChange={handleLanguageChange} size="sm" className='bg-dark text-white border-secondary'>
+                <option>Select Language</option>
+                <option value='javascript'>javascript</option>
+                <option value='typescript'>typescript</option>
+                <option value='java'>java</option>
+                <option value='csharp'>csharp</option>
+                <option value='c'>c</option>
+                <option value='python'>python</option>
+                {/*<option value='abap'>abap</option>
               <option value='aes'>aes</option>
               <option value='apex'>apex</option>
               <option value='azcli'>azcli</option>
@@ -257,23 +248,23 @@ function PostEditor(props) {
               <option value='xml'>xml</option>
               <option value='yaml'>yaml</option>
               */}
-          </Form.Select>
-          </Col>
-          {/* comento por ahora
+              </Form.Select>
+            </Col>
+            {/* comento por ahora
           <Col sm={2} className='d-flex justify-content-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="25" fill="currentColor" className="bi bi-file-earmark-arrow-up-fill" viewBox="0 0 16 16">
             <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.707V12.5a.5.5 0 0 1-1 0V8.707L6.354 9.854z"/>
             </svg>
           </Col>
           */}
-          <Col sm={6} className='d-flex justify-content-end'><Button className='border-secondary' sm={12} onClick={handleSubmit} size="sm" variant="dark" type="submit">Post</Button></Col>
-          <Col sm={12} className='p-2'>
-          {error? <div className="d-flex justify-content-center alert alert-danger" sm={12} role="alert"> {errorMsj} </div> 
-          : <></>}
-          </Col>
-        </Form.Group>
-      </Row>
-    </Form>
+            <Col sm={6} className='d-flex justify-content-end'><Button className='border-secondary' sm={12} size="sm" variant="dark" type="submit">Post</Button></Col>
+            <Col sm={12} className='p-2'>
+              {error ? <div className="d-flex justify-content-center alert alert-danger" sm={12} role="alert"> {errorMsj} </div>
+                : <></>}
+            </Col>
+          </Form.Group>
+        </Row>
+      </Form>
     </div>
   );
 }
