@@ -169,7 +169,13 @@ function PostEditor(props) {
           <Col sm={6} className='d-flex justify-content-start'>
           <Form.Select onChange={handleLanguageChange} size="sm" className='bg-dark text-white border-secondary'>
               <option>Select Language</option>
-              <option value='abap'>abap</option>
+              <option value='javaScript'>javaScript</option>
+              <option value='typeScript'>typeScript</option>
+              <option value='java'>java</option>
+              <option value='csharp'>csharp</option>
+              <option value='c'>c</option>
+              <option value='python'>python</option>
+              {/*<option value='abap'>abap</option>
               <option value='aes'>aes</option>
               <option value='apex'>apex</option>
               <option value='azcli'>azcli</option>
@@ -250,6 +256,7 @@ function PostEditor(props) {
               <option value='verilog'>verilog</option>
               <option value='xml'>xml</option>
               <option value='yaml'>yaml</option>
+              */}
           </Form.Select>
           </Col>
           {/* comento por ahora
