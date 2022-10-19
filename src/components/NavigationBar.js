@@ -1,4 +1,4 @@
-import React, { useState ,useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -8,18 +8,40 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import AuthContext from '../context/Auth-context';
 import Modal from 'react-bootstrap/Modal';
 import PostEditor from './PostEditor';
+import apiClient from '../services/apiClient';
 
-function NavigationBar() {
+
+function NavigationBar(id) {
+
     const ctx = useContext(AuthContext)
     const navigate = useNavigate()
 
+    const [user, setUser] = useState(null)
+    const [profile, setProfile] = useState(null)
     const [show, setShow] = useState(false);
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const handleLogout = (event) => {
         ctx.onLogout()
         navigate("/login")
+    }
+
+    const navigateProfile = (event) => {
+        navigate("/profile", { state: { id: 5 } })
+    }
+
+    useEffect(() => {
+        apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
+        apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
+        // apiClient.get(`/api/user/following/${ctx.userId}`)
+    }, []);
+    const parseUser = (res) => setUser(res.data)
+    const parseProfile = (res) => setProfile(res.data)
+
+    if (!profile || !user) {
+        return <div>loading..</div>
     }
 
     return (
@@ -48,7 +70,7 @@ function NavigationBar() {
                     <Nav>
                         <div className="d-flex align-items-center text-white text-decoration-none">
                             <Dropdown drop='down' align={{ lg: 'end' }} >
-                                <Dropdown.Toggle id="user-menu" variant="black text-white"  onClick={handleShow}>
+                                <Dropdown.Toggle id="user-menu" variant="black text-white" onClick={handleShow}>
                                     Nuevo Post
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu variant="dark">
@@ -59,13 +81,13 @@ function NavigationBar() {
 
                             <Dropdown drop='down' align={{ lg: 'end' }} >
                                 <Dropdown.Toggle id="user-menu" variant="black text-white">
-                                    <img alt="img1" className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '50px' }} ></img>
+                                    <img alt="img1" className='rounded-circle me-2' src={`https://vsa-bucket-test.s3.sa-east-1.amazonaws.com/${profile.pfp}`} style={{ maxHeight: '50px' }} ></img>
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu variant="dark">
-                                    <Dropdown.Item eventKey="2" href="/profile">Profile</Dropdown.Item>
+                                    <Dropdown.Item onClick={navigateProfile}>Profile</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item onClick={handleLogout} eventKey="2">Log out</Dropdown.Item>
+                                    <Dropdown.Item onClick={handleLogout}>Log out</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
 
@@ -74,11 +96,11 @@ function NavigationBar() {
                 </Navbar.Collapse>
             </Container>
             <Modal size="xl" show={show} onHide={handleClose} backdrop="static" keyboard={false}>
-            <Modal.Header className="bg-dark text-white" closeButton>
-            <Modal.Title className="bg-dark  text-white" >NuevoPost</Modal.Title>
-            </Modal.Header>
+                <Modal.Header className="bg-dark text-white" closeButton>
+                    <Modal.Title className="bg-dark  text-white" >NuevoPost</Modal.Title>
+                </Modal.Header>
                 <Modal.Body className="bg-dark  text-white">
-                <PostEditor/>
+                    <PostEditor />
                 </Modal.Body>
             </Modal>
         </Navbar>

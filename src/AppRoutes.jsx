@@ -10,11 +10,11 @@ import NavigationBar from "./components/NavigationBar"
 
 const AppRoutes = () => {
 
-    const { isAuth } = React.useContext(AuthContext)
+    const { isAuth, userId } = React.useContext(AuthContext)
 
     return (
         <>
-            {isAuth() && <NavigationBar />}
+            {isAuth() && <NavigationBar userId={userId} />}
             <Routes>
                 {!isAuth() ?
                     <>
