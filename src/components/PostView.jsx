@@ -8,7 +8,6 @@ function PostView(props) {
 
   const { user, post } = props
   const date = new Date(post.createdAt)
-  console.log(user)
 
   function handleEditorChange(value, event) {
     // here is the current value
