@@ -20,10 +20,10 @@ function NavigationBar() {
 
 
     //ejemplo nombres usuarios
-    const response = [{id: 1, username: "Robin Slade"},
-                      {id: 2, username: "Belinda Arredondo"},
-                      {id: 3, username: "Eddie Riojas"},
-                      {id: 4, username: "Billy Baird"}]
+    const response = [{id: 1, username: "fakeusernum1"},
+                      {id: 2, username: "fakeusernum2"},
+                      {id: 3, username: "fakeusernum3"},
+                      {id: 4, username: "fakeusernum4"}]
 
     useEffect(() => {
         const identifier = setTimeout(() => {
@@ -67,16 +67,19 @@ function NavigationBar() {
                         <input
                             type="search"
                             placeholder="Search..."
-                            className="me-2 p-1 bg-black border-0 rounded text-light"
+                            className="me-2 p-1 bg-black border-0 rounded text-light "
                             aria-label="Search"
                             size='sm'
                             onChange={handleSerched}
                         />
                         {showDropdown && input?
-                        <div className="list-group">
+                        <div className="list-group position-absolute" style={{transform: 'translate(0%, 12%)'}}>
                             {response.map((user) => {
                                 return (
-                                    <a href="#" key={user.id} className="list-group-item list-group-item-action">{user.username}</a>
+                                    <a href="#" key={user.id} className="list-group-item list-group-item-action d-flex">   
+                                        <img className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '50px' }}  />
+                                        <span className='align-self-center'>{user.username}</span>
+                                    </a>
                                 )})
                             }
                             
