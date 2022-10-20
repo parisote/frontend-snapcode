@@ -1,4 +1,4 @@
-import React, { useState ,useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -14,6 +14,34 @@ function NavigationBar() {
     const navigate = useNavigate()
 
     const [show, setShow] = useState(false);
+    const [isSearching, setIsSearching] = useState(false)
+    const [input, setInput] = useState(false)
+    const [showDropdown, setShowDropdown] = useState(false)
+
+
+    //ejemplo nombres usuarios
+    const response = [{id: 1, username: "Robin Slade"},
+                      {id: 2, username: "Belinda Arredondo"},
+                      {id: 3, username: "Eddie Riojas"},
+                      {id: 4, username: "Billy Baird"}]
+
+    useEffect(() => {
+        const identifier = setTimeout(() => {
+            handleSerched(input)
+            if (input){
+                setShowDropdown(true)
+                console.log(`Request a api -> ${input}`) 
+            }
+        } ,500)
+
+        return () => {
+            clearTimeout(identifier)
+            setIsSearching(true)
+            setShowDropdown(false)
+          }
+      }, [input])
+
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -22,18 +50,38 @@ function NavigationBar() {
         navigate("/login")
     }
 
+    const handleSerched = (event) => {
+        setIsSearching(false)
+        //da error si se coloca event.target?.value
+        if (event.target){
+            setInput(event.target.value)
+        } 
+      }
+
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
             <Container fluid>
                 <Navbar.Brand href="/feed">SnapCode</Navbar.Brand>
-                <Form className="d-flex">
-                    <Form.Control
-                        type="search"
-                        placeholder="Search..."
-                        className="me-2 bg-black border-0"
-                        aria-label="Search"
-                        size='sm'
-                    />
+                <Form>
+                    <div className="d-flex flex-column">
+                        <input
+                            type="search"
+                            placeholder="Search..."
+                            className="me-2 p-1 bg-black border-0 rounded text-light"
+                            aria-label="Search"
+                            size='sm'
+                            onChange={handleSerched}
+                        />
+                        {showDropdown && input?
+                        <div className="list-group">
+                            {response.map((user) => {
+                                return (
+                                    <a href="#" key={user.id} className="list-group-item list-group-item-action">{user.username}</a>
+                                )})
+                            }
+                            
+                        </div> : <></>}
+                    </div>              
                 </Form>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll" >
