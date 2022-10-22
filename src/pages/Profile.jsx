@@ -5,7 +5,7 @@ import PostView from '../components/PostView';
 import ProfileTopBar from '../components/ProfileTopBar';
 import apiClient from '../services/apiClient';
 import AuthContext from '../context/Auth-context';
-import { sortPosts } from '../utils/utilities';
+import { sortLikedPosts, sortPosts } from '../utils/utilities';
 
 
 const Profile = () => {
@@ -36,11 +36,15 @@ const Profile = () => {
     }, []);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
-    const parsePosts = (res) => setPosts(res.data.post)
-    const parseLikedPosts = (res) => setLikedPosts(res.data[0].likedPosts)
+    const parsePosts = (res) => setPosts(res.data)
+    const parseLikedPosts = (res) => setLikedPosts(res.data)
 
     if (!profile || !user || !posts || !likedPosts) {
         return <div className='bg-dark min-vh-100 text-white'>loading</div>
+    }
+
+    if (!user || !profile || !posts || !likedPosts) {
+        return <div>loading</div>
     }
 
     const data = {
@@ -56,8 +60,7 @@ const Profile = () => {
     }
 
     const renderLikedPosts = () => {
-        const sortedPosts = sortPosts(likedPosts, 'date')
-        console.log(sortedPosts)
+        const sortedPosts = sortPosts(likedPosts[0].likedPosts, 'date')
         return (
             <>{sortedPosts.map(post => (<PostView post={post} key={post.id} />))}</>
         )
