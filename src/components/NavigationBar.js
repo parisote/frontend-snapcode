@@ -43,7 +43,6 @@ function NavigationBar(id) {
     useEffect(() => {
         apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
         apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
-        // apiClient.get(`/api/user/following/${ctx.userId}`)
     }, []);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)

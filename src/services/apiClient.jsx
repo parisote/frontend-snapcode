@@ -1,5 +1,4 @@
 import axios from "axios";
-require('dotenv').config()
 
 const PORT = process.env.REACT_APP_API_PORT
 const baseURL = "http://localhost:" + PORT
