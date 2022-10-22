@@ -18,19 +18,14 @@ function NavigationBar() {
     const [show, setShow] = useState(false);
     const [input, setInput] = useState(false)
     const [showDropdown, setShowDropdown] = useState(false)
-
-    //ejemplo nombres usuarios
-    const response = [{id: 1, username: "12345678901232asdasd"},
-                        {id: 2, username: "fakeusernum2"},
-                        {id: 3, username: "fakeusernum2"},
-                        {id: 4, username: "fakeusernum2"},
-                        {id: 5, username: "fakeusernum4"}]
+    const [users, setUsers] = useState([])
 
     useEffect(() => {
-        const identifier = setTimeout(() => {
+        const identifier = setTimeout( async () => {
             handleSerched(input)
             if (input){
-                searchbarService.search(input)
+                let response = await searchbarService.search(input)
+                setUsers(response.data)
                 setShowDropdown(true)
             }
         } ,500)
@@ -42,6 +37,7 @@ function NavigationBar() {
       }, [input])
 
     const goToUserProfile = (id) => {
+        navigate("/profile", {state: {id}})
         console.log("Profile user " + id)
         setShowDropdown(false)
     }
@@ -79,7 +75,7 @@ function NavigationBar() {
                         />
                         {showDropdown && input?
                         <div className="list-group position-absolute top-100" >  
-                            {response.map((user) => {
+                            {users.map((user) => {
                                 return (
                                     <a onClick={() => goToUserProfile(user.id)} href='#' key={user.id} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
                                         <img className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '40px' }}  />
