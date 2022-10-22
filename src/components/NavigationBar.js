@@ -8,38 +8,43 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import AuthContext from '../context/Auth-context';
 import Modal from 'react-bootstrap/Modal';
 import PostEditor from './PostEditor';
+import truncarString from '../utils/stringUtils';
+import searchbarService from '../services/searchbarService'
 
 function NavigationBar() {
     const ctx = useContext(AuthContext)
     const navigate = useNavigate()
 
     const [show, setShow] = useState(false);
-    const [isSearching, setIsSearching] = useState(false)
     const [input, setInput] = useState(false)
     const [showDropdown, setShowDropdown] = useState(false)
 
-
     //ejemplo nombres usuarios
-    const response = [{id: 1, username: "fakeusernum1"},
-                      {id: 2, username: "fakeusernum2"},
-                      {id: 3, username: "fakeusernum3"},
-                      {id: 4, username: "fakeusernum4"}]
+    const response = [{id: 1, username: "12345678901232asdasd"},
+                        {id: 2, username: "fakeusernum2"},
+                        {id: 3, username: "fakeusernum2"},
+                        {id: 4, username: "fakeusernum2"},
+                        {id: 5, username: "fakeusernum4"}]
 
     useEffect(() => {
         const identifier = setTimeout(() => {
             handleSerched(input)
             if (input){
+                searchbarService.search(input)
                 setShowDropdown(true)
-                console.log(`Request a api -> ${input}`) 
             }
         } ,500)
 
         return () => {
             clearTimeout(identifier)
-            setIsSearching(true)
             setShowDropdown(false)
           }
       }, [input])
+
+    const goToUserProfile = (id) => {
+        console.log("Profile user " + id)
+        setShowDropdown(false)
+    }
 
 
     const handleClose = () => setShow(false);
@@ -51,7 +56,6 @@ function NavigationBar() {
     }
 
     const handleSerched = (event) => {
-        setIsSearching(false)
         //da error si se coloca event.target?.value
         if (event.target){
             setInput(event.target.value)
@@ -63,22 +67,23 @@ function NavigationBar() {
             <Container fluid>
                 <Navbar.Brand href="/feed">SnapCode</Navbar.Brand>
                 <Form>
-                    <div className="d-flex flex-column">
+                    <div className="d-flex flex-column position-relative align-items-center" style={{alignItems: 'baseline'}}>
                         <input
                             type="search"
                             placeholder="Search..."
                             className="me-2 p-1 bg-black border-0 rounded text-light "
+                            
                             aria-label="Search"
                             size='sm'
                             onChange={handleSerched}
                         />
                         {showDropdown && input?
-                        <div className="list-group position-absolute" style={{transform: 'translate(0%, 12%)'}}>
+                        <div className="list-group position-absolute top-100" >  
                             {response.map((user) => {
                                 return (
-                                    <a href="#" key={user.id} className="list-group-item list-group-item-action d-flex">   
-                                        <img className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '50px' }}  />
-                                        <span className='align-self-center'>{user.username}</span>
+                                    <a onClick={() => goToUserProfile(user.id)} href='#' key={user.id} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
+                                        <img className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '40px' }}  />
+                                        <span className='align-self-center'>{truncarString(user.username)}</span>
                                     </a>
                                 )})
                             }
@@ -86,6 +91,7 @@ function NavigationBar() {
                         </div> : <></>}
                     </div>              
                 </Form>
+                
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll" >
                     <Nav
