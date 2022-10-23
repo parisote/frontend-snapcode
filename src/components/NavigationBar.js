@@ -9,7 +9,8 @@ import AuthContext from '../context/Auth-context';
 import Modal from 'react-bootstrap/Modal';
 import PostEditor from './PostEditor';
 import apiClient from '../services/apiClient';
-
+import { profileApi } from '../services/apiClient'
+import truncarString from '../utils/stringUtils';
 
 function NavigationBar(id) {
 
@@ -19,6 +20,19 @@ function NavigationBar(id) {
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
     const [show, setShow] = useState(false);
+
+    const [input, setInput] = useState(false)
+    const [showDropdown, setShowDropdown] = useState(false)
+    const [users, setUsers] = useState([])
+
+    const goToUserProfile = (id) => {
+        navigate("/profile", {state: {id}})
+        setShowDropdown(false)
+    }
+
+    const handleSerched = (event) => {
+        if (event.target) setInput(event.target.value)
+      }
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -47,6 +61,21 @@ function NavigationBar(id) {
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
 
+    useEffect(() => {
+        const identifier = setTimeout(() => {
+            handleSerched(input)
+            if (input){
+                profileApi.get(`search/${input}`).then((res) => setUsers(res.data))
+                setShowDropdown(true)
+            }
+        } ,500)
+
+        return () => {
+            clearTimeout(identifier)
+            setShowDropdown(false)
+          }
+      }, [input])
+
     if (!profile || !user) {
         return <div className='bg-dark min-vh-100'>loading</div>
     }
@@ -55,15 +84,32 @@ function NavigationBar(id) {
         <Navbar bg="dark" variant="dark" expand="lg">
             <Container fluid>
                 <Navbar.Brand href="/feed">SnapCode</Navbar.Brand>
-                <Form className="d-flex">
-                    <Form.Control
-                        type="search"
-                        placeholder="Search..."
-                        className="me-2 bg-black border-0"
-                        aria-label="Search"
-                        size='sm'
-                    />
+                <Form>
+                    <div className="d-flex flex-column position-relative align-items-center" style={{alignItems: 'baseline'}}>
+                        <input
+                            type="search"
+                            placeholder="Search..."
+                            className="me-2 p-1 bg-black border-0 rounded text-light "
+                            
+                            aria-label="Search"
+                            size='sm'
+                            onChange={handleSerched}
+                        />
+                        {showDropdown && input?
+                        <div className="list-group position-absolute top-100 start-0" >  
+                            {users.map((user) => {
+                                return (
+                                    <a onClick={() => goToUserProfile(user.userId)} href='#' key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
+                                        <img className='rounded-circle me-2' src={user.image} style={{ maxHeight: '40px' }}  />
+                                        <span className='align-self-center'>{truncarString(user.username)}</span>
+                                    </a>
+                                )})
+                            }
+                            
+                        </div> : <></>}
+                    </div>              
                 </Form>
+                
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll" >
                     <Nav
