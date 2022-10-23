@@ -11,7 +11,6 @@ import { sortLikedPosts, sortPosts } from '../utils/utilities';
 const Profile = () => {
     const ctx = useContext(AuthContext)
     const location = useLocation()
-
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
     const [toggle, setToggle] = useState(false)

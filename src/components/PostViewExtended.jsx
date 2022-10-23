@@ -71,6 +71,7 @@ function PostView(props) {
 
   return (
     <div className='container-fluid text-white bg-black mt-3'>
+      {console.log(props)}
       <div className='row gx-0'>
         <div className='d-flex'>
           <img src={`https://vsa-bucket-test.s3.sa-east-1.amazonaws.com/${profile.pfp}`} alt='alt' className='img-fluid rounded-circle' style={{ maxHeight: '40px' }}></img>

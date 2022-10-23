@@ -26,13 +26,14 @@ function NavigationBar(id) {
     const [users, setUsers] = useState([])
 
     const goToUserProfile = (id) => {
-        navigate("/profile", {state: {id}})
+        navigate("/profile", { state: { id } })
+        window.location.reload()
         setShowDropdown(false)
     }
 
     const handleSerched = (event) => {
         if (event.target) setInput(event.target.value)
-      }
+    }
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -52,6 +53,7 @@ function NavigationBar(id) {
 
     const navigateProfile = (event) => {
         navigate("/profile", { state: { id: ctx.userId } })
+        window.location.reload()
     }
 
     useEffect(() => {
@@ -64,17 +66,17 @@ function NavigationBar(id) {
     useEffect(() => {
         const identifier = setTimeout(() => {
             handleSerched(input)
-            if (input){
+            if (input) {
                 profileApi.get(`search/${input}`).then((res) => setUsers(res.data))
                 setShowDropdown(true)
             }
-        } ,500)
+        }, 500)
 
         return () => {
             clearTimeout(identifier)
             setShowDropdown(false)
-          }
-      }, [input])
+        }
+    }, [input])
 
     if (!profile || !user) {
         return <div className='bg-dark min-vh-100'>loading</div>
@@ -85,31 +87,32 @@ function NavigationBar(id) {
             <Container fluid>
                 <Navbar.Brand href="/feed">SnapCode</Navbar.Brand>
                 <Form>
-                    <div className="d-flex flex-column position-relative align-items-center" style={{alignItems: 'baseline'}}>
+                    <div className="d-flex flex-column position-relative align-items-center" style={{ alignItems: 'baseline' }}>
                         <input
                             type="search"
                             placeholder="Search..."
                             className="me-2 p-1 bg-black border-0 rounded text-light "
-                            
+
                             aria-label="Search"
                             size='sm'
                             onChange={handleSerched}
                         />
-                        {showDropdown && input?
-                        <div className="list-group position-absolute top-100 start-0" >  
-                            {users.map((user) => {
-                                return (
-                                    <a onClick={() => goToUserProfile(user.userId)} href='#' key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
-                                        <img className='rounded-circle me-2' src={user.image} style={{ maxHeight: '40px' }}  />
-                                        <span className='align-self-center'>{truncarString(user.username)}</span>
-                                    </a>
-                                )})
-                            }
-                            
-                        </div> : <></>}
-                    </div>              
+                        {showDropdown && input ?
+                            <div className="list-group position-absolute top-100 start-0" >
+                                {users.map((user) => {
+                                    return (
+                                        <a onClick={() => goToUserProfile(user.userId)} href='#' key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">
+                                            <img className='rounded-circle me-2' src={user.image} style={{ maxHeight: '40px' }} />
+                                            <span className='align-self-center'>{truncarString(user.username)}</span>
+                                        </a>
+                                    )
+                                })
+                                }
+
+                            </div> : <></>}
+                    </div>
                 </Form>
-                
+
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll" >
                     <Nav
