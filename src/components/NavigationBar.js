@@ -25,7 +25,7 @@ function NavigationBar() {
             handleSerched(input)
             if (input){
                 let response = await searchbarService.search(input)
-                setUsers(response.data)
+                if (response) setUsers(response.data)
                 setShowDropdown(true)
             }
         } ,500)
@@ -70,7 +70,7 @@ function NavigationBar() {
                             onChange={handleSerched}
                         />
                         {showDropdown && input?
-                        <div className="list-group position-absolute top-100" >  
+                        <div className="list-group position-absolute top-100 start-0" >  
                             {users.map((user) => {
                                 return (
                                     <a onClick={() => goToUserProfile(user.id)} href='#' key={user.id} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
