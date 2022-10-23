@@ -257,7 +257,7 @@ function PostEditor(props) {
             </svg>
           </Col>
           */}
-            <Col sm={6} className='d-flex justify-content-end'><Button className='border-secondary' sm={12} size="sm" variant="dark" type="submit">Post</Button></Col>
+            <Col sm={6} className='d-flex justify-content-end'><Button className='border-secondary' sm={12} size="sm" variant="success" type="submit">Post</Button></Col>
             <Col sm={12} className='p-2'>
               {error ? <div className="d-flex justify-content-center alert alert-danger" sm={12} role="alert"> {errorMsj} </div>
                 : <></>}
