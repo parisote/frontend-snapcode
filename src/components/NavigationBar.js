@@ -38,7 +38,6 @@ function NavigationBar() {
 
     const goToUserProfile = (id) => {
         navigate("/profile", {state: {id}})
-        console.log("Profile user " + id)
         setShowDropdown(false)
     }
 
@@ -52,10 +51,7 @@ function NavigationBar() {
     }
 
     const handleSerched = (event) => {
-        //da error si se coloca event.target?.value
-        if (event.target){
-            setInput(event.target.value)
-        } 
+        if (event.target) setInput(event.target.value)
       }
 
     return (
