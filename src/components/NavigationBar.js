@@ -8,24 +8,65 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import AuthContext from '../context/Auth-context';
 import Modal from 'react-bootstrap/Modal';
 import PostEditor from './PostEditor';
+import apiClient from '../services/apiClient';
+import { profileApi } from '../services/apiClient'
 import truncarString from '../utils/stringUtils';
-import searchbarService from '../services/searchbarService'
 
-function NavigationBar() {
+function NavigationBar(id) {
+
     const ctx = useContext(AuthContext)
     const navigate = useNavigate()
 
+    const [user, setUser] = useState(null)
+    const [profile, setProfile] = useState(null)
     const [show, setShow] = useState(false);
+
     const [input, setInput] = useState(false)
     const [showDropdown, setShowDropdown] = useState(false)
     const [users, setUsers] = useState([])
 
+    const goToUserProfile = (id) => {
+        console.log("ir a user " + id)
+        navigate("/profile", {state: {id}})
+        setShowDropdown(false)
+    }
+
+    const handleSerched = (event) => {
+        if (event.target) setInput(event.target.value)
+      }
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const handleLogout = (event) => {
+        ctx.onLogout()
+        navigate("/login")
+    }
+
+    const navigateHome = (event) => {
+        navigate("/home")
+    }
+
+    const navigateTrending = (event) => {
+        navigate("/trending")
+    }
+
+    const navigateProfile = (event) => {
+        navigate("/profile", { state: { id: ctx.userId } })
+    }
+
     useEffect(() => {
-        const identifier = setTimeout( async () => {
+        apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
+        apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
+    }, []);
+    const parseUser = (res) => setUser(res.data)
+    const parseProfile = (res) => setProfile(res.data)
+
+    useEffect(() => {
+        const identifier = setTimeout(() => {
             handleSerched(input)
             if (input){
-                let response = await searchbarService.search(input)
-                if (response) setUsers(response.data)
+                profileApi.get(`search/${input}`).then((res) => setUsers(res.data))
                 setShowDropdown(true)
             }
         } ,500)
@@ -36,23 +77,9 @@ function NavigationBar() {
           }
       }, [input])
 
-    const goToUserProfile = (id) => {
-        navigate("/profile", {state: {id}})
-        setShowDropdown(false)
+    if (!profile || !user) {
+        return <div className='bg-dark min-vh-100'>loading</div>
     }
-
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    const handleLogout = (event) => {
-        ctx.onLogout()
-        navigate("/login")
-    }
-
-    const handleSerched = (event) => {
-        if (event.target) setInput(event.target.value)
-      }
 
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
@@ -73,7 +100,7 @@ function NavigationBar() {
                         <div className="list-group position-absolute top-100 start-0" >  
                             {users.map((user) => {
                                 return (
-                                    <a onClick={() => goToUserProfile(user.id)} href='#' key={user.id} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
+                                    <a onClick={() => goToUserProfile(user.userId)} href='#' key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
                                         <img className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '40px' }}  />
                                         <span className='align-self-center'>{truncarString(user.username)}</span>
                                     </a>
@@ -91,13 +118,13 @@ function NavigationBar() {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-                        <Nav.Link href="/feed"> Feed </Nav.Link>
-                        <Nav.Link href="/trending" >Trending</Nav.Link>
+                        <Nav.Link onClick={navigateHome}> Feed </Nav.Link>
+                        <Nav.Link onClick={navigateTrending}> Trending </Nav.Link>
                     </Nav>
                     <Nav>
                         <div className="d-flex align-items-center text-white text-decoration-none">
                             <Dropdown drop='down' align={{ lg: 'end' }} >
-                                <Dropdown.Toggle id="user-menu" variant="black text-white"  onClick={handleShow}>
+                                <Dropdown.Toggle id="user-menu" variant="black text-white" onClick={handleShow}>
                                     Nuevo Post
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu variant="dark">
@@ -108,13 +135,13 @@ function NavigationBar() {
 
                             <Dropdown drop='down' align={{ lg: 'end' }} >
                                 <Dropdown.Toggle id="user-menu" variant="black text-white">
-                                    <img alt="img1" className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '50px' }} ></img>
+                                    <img alt="img1" className='rounded-circle me-2' src={`https://vsa-bucket-test.s3.sa-east-1.amazonaws.com/${profile.pfp}`} style={{ maxHeight: '50px' }} ></img>
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu variant="dark">
-                                    <Dropdown.Item eventKey="2" href="/profile">Profile</Dropdown.Item>
+                                    <Dropdown.Item onClick={navigateProfile}>Profile</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item onClick={handleLogout} eventKey="2">Log out</Dropdown.Item>
+                                    <Dropdown.Item onClick={handleLogout}>Log out</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
 
@@ -123,11 +150,11 @@ function NavigationBar() {
                 </Navbar.Collapse>
             </Container>
             <Modal size="xl" show={show} onHide={handleClose} backdrop="static" keyboard={false}>
-            <Modal.Header className="bg-dark text-white" closeButton>
-            <Modal.Title className="bg-dark  text-white" >NuevoPost</Modal.Title>
-            </Modal.Header>
+                <Modal.Header className="bg-dark text-white" closeButton>
+                    <Modal.Title className="bg-dark  text-white" >NuevoPost</Modal.Title>
+                </Modal.Header>
                 <Modal.Body className="bg-dark  text-white">
-                <PostEditor/>
+                    <PostEditor />
                 </Modal.Body>
             </Modal>
         </Navbar>

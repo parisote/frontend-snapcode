@@ -4,17 +4,17 @@ import AuthContext from "./context/Auth-context";
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Profile from "./pages/Profile"
-import Feed from "./pages/Feed"
-import Trending from "./pages/Trending"
+import Feed from "./pages/Feed.jsx"
+import Trending from "./pages/Trending.jsx"
 import NavigationBar from "./components/NavigationBar"
 
 const AppRoutes = () => {
 
-    const { isAuth } = React.useContext(AuthContext)
+    const { isAuth, userId } = React.useContext(AuthContext)
 
     return (
         <>
-            {isAuth() && <NavigationBar />}
+            {isAuth() && <NavigationBar userId={userId} />}
             <Routes>
                 {!isAuth() ?
                     <>

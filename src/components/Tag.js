@@ -6,32 +6,32 @@ function Tag(props) {
     const { text } = props
     let variant = ''
 
-    switch (text) {
-        case 'JavaScript':
+    switch (text.toLowerCase()) {
+        case 'javascript':
             variant = 'outline-warning'
             break;
-        case 'TypeScript':
+        case 'typescript':
             variant = 'outline-info'
             break;
-        case 'Java':
+        case 'java':
             variant = 'outline-danger'
             break;
-        case 'C#':
+        case 'c#':
             variant = 'outline-secondary'
             break;
-        case 'C++':
+        case 'c++':
             variant = 'outline-secondary'
             break;
-        case 'Python':
+        case 'python':
             variant = 'outline-success'
             break;
-        case 'React':
+        case 'react':
             variant = 'outline-primary'
             break;
-        case 'Angular':
+        case 'angular':
             variant = 'outline-danger'
             break;
-        case 'Vue':
+        case 'vue':
             variant = 'outline-danger'
             break;
         case 'express':
