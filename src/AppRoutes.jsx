@@ -5,6 +5,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Profile from "./pages/Profile"
 import Feed from "./pages/Feed.jsx"
+import Post from "./pages/Post.jsx"
 import Trending from "./pages/Trending.jsx"
 import NavigationBar from "./components/NavigationBar"
 
@@ -24,6 +25,7 @@ const AppRoutes = () => {
                     </>
                     : <>
                         <Route path="/feed" element={<Feed />} />
+                        <Route path="/post" element={<Post />} />
                         <Route path="/trending" element={<Trending />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="*" element={<Navigate to="/feed" />} replace />
