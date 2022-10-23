@@ -100,7 +100,7 @@ function NavigationBar(id) {
                             {users.map((user) => {
                                 return (
                                     <a onClick={() => goToUserProfile(user.userId)} href='#' key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
-                                        <img className='rounded-circle me-2' src={`data:image/png;base64,${user.pfp}`} style={{ maxHeight: '40px' }}  />
+                                        <img className='rounded-circle me-2' src={user.image} style={{ maxHeight: '40px' }}  />
                                         <span className='align-self-center'>{truncarString(user.username)}</span>
                                     </a>
                                 )})

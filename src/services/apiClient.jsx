@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const PORT = process.env.REACT_APP_API_PORT
-const baseURL = "http://localhost:" + PORT
+const baseURL= process.env.REACT_APP_URI
 
 let token = ''
 if (localStorage.getItem('auth')) {
