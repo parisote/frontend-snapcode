@@ -26,9 +26,8 @@ const Trending = () => {
     }
 
     const renderPosts = () => {
-        const sortedPosts = sortPosts(posts, 'date')
         return (
-            <>{sortedPosts.map(post => (<PostView user={data} post={post} key={post.id} />))}</>
+            <>{posts.map(post => (<PostView user={data} post={post} key={post.id} />))}</>
         )
     }
 

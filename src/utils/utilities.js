@@ -10,7 +10,7 @@ export const sortPosts = (posts, sortBy) => {
     return posts
 }
 
-export const  sortCommentaries= (commentaries, sortBy) => {
+export const sortCommentaries = (commentaries, sortBy) => {
     //by date sortea poniendo desde el post mas reciente primero, a los mas viejos.
     if (sortBy === 'date') {
         let sortedCommentaries = commentaries.sort((a, b) => {

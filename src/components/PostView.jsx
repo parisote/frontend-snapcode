@@ -5,9 +5,11 @@ import themeData from '../utils/monacoConfigs'
 import Tag from './Tag';
 import AuthContext from '../context/Auth-context';
 import apiClient from '../services/apiClient';
+import { useNavigate } from 'react-router-dom';
 
 function PostView(props) {
   const ctx = useContext(AuthContext)
+  const navigate = useNavigate()
   const { post } = props
   const [profile, setProfile] = useState(null)
   const [likes, setLikes] = useState(post.likedBy.length)
@@ -63,6 +65,11 @@ function PostView(props) {
     return (
       <>{tags.map(name => (<Tag text={name} key={name} />))}</>
     )
+  }
+
+  const navigateToPost = () => {
+    navigate("/post", { state: { post: post } })
+    window.location.reload()
   }
 
   if (!profile) {
@@ -137,8 +144,14 @@ function PostView(props) {
             onValidate={handleEditorValidation}
           />
         </div>
-        <div className='d-flex'>
-          {renderTags()}
+        <div className='d-flex flex-order-1 flex-md-order-none'>
+          <div className='d-flex flex-order-1 flex-md-order-none'>{renderTags()}</div>
+          <div className='d-flex flex-order-1 flex-md-order-none ms-auto mt-2' onClick={navigateToPost}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-box-arrow-up-right text-secondary mx-1" viewBox="0 0 16 16">
+              <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+              <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+            </svg>
+          </div>
         </div>
       </div>
       {/* <div className='border-bottom border-secondary mt-2'></div> */}
