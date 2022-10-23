@@ -26,7 +26,6 @@ function NavigationBar(id) {
     const [users, setUsers] = useState([])
 
     const goToUserProfile = (id) => {
-        console.log("ir a user " + id)
         navigate("/profile", {state: {id}})
         setShowDropdown(false)
     }
@@ -101,7 +100,7 @@ function NavigationBar(id) {
                             {users.map((user) => {
                                 return (
                                     <a onClick={() => goToUserProfile(user.userId)} href='#' key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">   
-                                        <img className='rounded-circle me-2' src='https://cdn.wallpapersafari.com/71/8/mFdy4l.jpg' style={{ maxHeight: '40px' }}  />
+                                        <img className='rounded-circle me-2' src={`data:image/png;base64,${user.pfp}`} style={{ maxHeight: '40px' }}  />
                                         <span className='align-self-center'>{truncarString(user.username)}</span>
                                     </a>
                                 )})
