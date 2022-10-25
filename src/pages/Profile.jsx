@@ -11,9 +11,11 @@ import { sortLikedPosts, sortPosts } from '../utils/utilities';
 const Profile = () => {
     const ctx = useContext(AuthContext)
     const location = useLocation()
+    const [toggle, setToggle] = useState(false)
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
-    const [toggle, setToggle] = useState(false)
+    const [followers, setFollowers] = useState(null)
+    const [followings, setFollowings] = useState(null)
     const [posts, setPosts] = useState(null)
     const [likedPosts, setLikedPosts] = useState(null)
 
@@ -31,14 +33,17 @@ const Profile = () => {
         apiClient.get(`/api/user/profile/${userId}`).then(parseProfile)
         apiClient.get(`/api/post/user/${userId}`).then(parsePosts)
         apiClient.get(`/api/post/user/liked/${userId}`).then(parseLikedPosts)
-        // apiClient.get(`/api/user/following/${ctx.userId}`)
+        apiClient.get(`/api/user/followers/${userId}`).then(parseFollowers)
+        apiClient.get(`/api/user/following/${userId}`).then(parseFollowings)
     }, []);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
+    const parseFollowers = (res) => setFollowers(res.data)
+    const parseFollowings = (res) => setFollowings(res.data)
     const parsePosts = (res) => setPosts(res.data)
     const parseLikedPosts = (res) => setLikedPosts(res.data)
 
-    if (!profile || !user || !posts || !likedPosts) {
+    if ([user, profile, posts, followers, followings, likedPosts].some(e => !e)) {
         return <div className='bg-dark min-vh-100 text-white'>loading</div>
     }
 
@@ -49,6 +54,8 @@ const Profile = () => {
     const data = {
         ...user,
         ...profile,
+        followers: followers,
+        followings: followings
     }
 
     const renderPosts = () => {
