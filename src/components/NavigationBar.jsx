@@ -10,7 +10,8 @@ import Modal from 'react-bootstrap/Modal';
 import PostEditor from './PostEditor';
 import PostMedia from './PostMedia';
 import apiClient from '../services/apiClient';
-
+import { profileApi } from '../services/apiClient'
+import truncarString from '../utils/stringUtils';
 
 function NavigationBar(id) {
 
@@ -27,6 +28,20 @@ function NavigationBar(id) {
     const handleCloseMedia = () => setShowMedia(false);
     const handleShowMedia = () => setShowMedia(true);
 
+    const [input, setInput] = useState(false)
+    const [showDropdown, setShowDropdown] = useState(false)
+    const [users, setUsers] = useState([])
+
+    const goToUserProfile = (id) => {
+        navigate("/profile", { state: { id } })
+        window.location.reload()
+        setShowDropdown(false)
+    }
+
+    const handleSerched = (event) => {
+        if (event.target) setInput(event.target.value)
+    }
+
     const handleLogout = (event) => {
         ctx.onLogout()
         navigate("/login")
@@ -42,15 +57,30 @@ function NavigationBar(id) {
 
     const navigateProfile = (event) => {
         navigate("/profile", { state: { id: ctx.userId } })
+        window.location.reload()
     }
 
     useEffect(() => {
         apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
         apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
-        // apiClient.get(`/api/user/following/${ctx.userId}`)
     }, []);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
+
+    useEffect(() => {
+        const identifier = setTimeout(() => {
+            handleSerched(input)
+            if (input) {
+                profileApi.get(`search/${input}`).then((res) => setUsers(res.data))
+                setShowDropdown(true)
+            }
+        }, 500)
+
+        return () => {
+            clearTimeout(identifier)
+            setShowDropdown(false)
+        }
+    }, [input])
 
     if (!profile || !user) {
         return <div className='bg-dark min-vh-100'>loading</div>
@@ -60,15 +90,33 @@ function NavigationBar(id) {
         <Navbar bg="dark" variant="dark" expand="lg">
             <Container fluid>
                 <Navbar.Brand href="/feed">SnapCode</Navbar.Brand>
-                <Form className="d-flex">
-                    <Form.Control
-                        type="search"
-                        placeholder="Search..."
-                        className="me-2 bg-black border-0"
-                        aria-label="Search"
-                        size='sm'
-                    />
+                <Form>
+                    <div className="d-flex flex-column position-relative align-items-center" style={{ alignItems: 'baseline' }}>
+                        <input
+                            type="search"
+                            placeholder="Search..."
+                            className="me-2 p-1 bg-black border-0 rounded text-light "
+
+                            aria-label="Search"
+                            size='sm'
+                            onChange={handleSerched}
+                        />
+                        {showDropdown && input ?
+                            <div className="list-group position-absolute top-100 start-0" >
+                                {users.map((user) => {
+                                    return (
+                                        <a onClick={() => goToUserProfile(user.userId)} href='#' key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">
+                                            <img className='rounded-circle me-2' src={user.image} style={{ maxHeight: '40px' }} />
+                                            <span className='align-self-center'>{truncarString(user.username)}</span>
+                                        </a>
+                                    )
+                                })
+                                }
+
+                            </div> : <></>}
+                    </div>
                 </Form>
+
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll" >
                     <Nav
@@ -110,7 +158,6 @@ function NavigationBar(id) {
                     </Nav>
                 </Navbar.Collapse>
             </Container>
-            
             <Modal size="xl" show={showPost} onHide={handleClosePost} backdrop="static" keyboard={false}>
                 <Modal.Header className="bg-dark text-white" closeButton>
                     <Modal.Title className="bg-dark  text-white" >Code post</Modal.Title>
