@@ -50,21 +50,21 @@ const Register = (props) => {
     }
 
     const newUser = {
-      username: username,
       name: name,
+      username: username,
       biography: biography,
       workingAt: workingAt,
       location: location,
       linkedIn: linkedin,
       twitter: twitter
     };
-    
-    let response = await profileApi.post("/update/"+ id, newUser);
-   
+
+    let response = await profileApi.post("/update/" + id, newUser);
+
     if (response.status === 201) {
       handleMsg("Usuario creado. ¡Bienvenido!")
       handleClose();
-      return <Navigate to="/login"/>
+      return <Navigate to="/login" />
     } else {
       console.log("error")
     }
@@ -93,7 +93,7 @@ const Register = (props) => {
   const handleBiography = (event) => {
     setBiography(event.target.value)
   }
-  
+
   const handleWorkingAt = (event) => {
     setWorkingAt(event.target.value)
   }
@@ -192,7 +192,7 @@ const Register = (props) => {
                               <Form.Control
                                 className="mb-3 bg-dark text-white"
                                 onChange={handleBiography}
-                                type= "biography"
+                                type="biography"
                                 placeholder="About me"
                                 autoFocus
                               />
@@ -244,7 +244,7 @@ const Register = (props) => {
                             Confirmar
                           </Button>
                           {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
-                        : <></>}
+                            : <></>}
                         </Modal.Footer >
                       </Modal>
 

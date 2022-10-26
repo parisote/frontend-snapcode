@@ -26,9 +26,8 @@ const Trending = () => {
     }
 
     const renderPosts = () => {
-        const sortedPosts = sortPosts(posts, 'date')
         return (
-            <>{sortedPosts.map(post => (<PostView user={data} post={post} key={post.id} />))}</>
+            <>{posts.map(post => (<PostView user={data} post={post} key={post.id} />))}</>
         )
     }
 
@@ -36,12 +35,12 @@ const Trending = () => {
     useEffect(() => {
         apiClient.get(`/api/user/${userId}`).then(parseUser)
         apiClient.get(`/api/user/profile/${userId}`).then(parseProfile)
-        apiClient.get(`/api/post/user/${userId}`).then(parsePosts)
+        apiClient.get(`/api/trending`).then(parsePosts)
         // apiClient.get(`/api/user/following/${ctx.userId}`)
     }, []);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
-    const parsePosts = (res) => setPosts(res.data.post)
+    const parsePosts = (res) => setPosts(res.data)
 
     if (!profile || !user || !posts) {
         return <div className='bg-dark min-vh-100'>loading</div>

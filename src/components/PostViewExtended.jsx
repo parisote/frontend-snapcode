@@ -5,11 +5,9 @@ import themeData from '../utils/monacoConfigs'
 import Tag from './Tag';
 import AuthContext from '../context/Auth-context';
 import apiClient from '../services/apiClient';
-import { useNavigate } from 'react-router-dom';
 
 function PostView(props) {
   const ctx = useContext(AuthContext)
-  const navigate = useNavigate()
   const { post } = props
   const [profile, setProfile] = useState(null)
   const [likes, setLikes] = useState(post.likedBy.length)
@@ -67,17 +65,13 @@ function PostView(props) {
     )
   }
 
-  const navigateToPost = () => {
-    navigate("/post", { state: { post: post } })
-    window.location.reload()
-  }
-
   if (!profile) {
     return <></>
   }
 
   return (
     <div className='container-fluid text-white bg-black mt-3'>
+      {console.log(props)}
       <div className='row gx-0'>
         <div className='d-flex'>
           <img src={`https://vsa-bucket-test.s3.sa-east-1.amazonaws.com/${profile.pfp}`} alt='alt' className='img-fluid rounded-circle' style={{ maxHeight: '40px' }}></img>
@@ -123,9 +117,9 @@ function PostView(props) {
             </video>
           } */}
         </div>
-        <div className='row gx-0 mt-2 border rounded border-secondary p-2' style={{ height: '23vh' }}>
+        <div className='row gx-0 mt-2 border rounded border-secondary p-2' style={{ height: '45vh' }}>
           <Editor
-            height="18vh"
+            height="40vh"
             defaultLanguage={post.code.language}
             defaultValue={post.code.value}
             theme='my-theme'
@@ -136,6 +130,7 @@ function PostView(props) {
               scrollbar: {
                 vertical: 'hidden'
               },
+              readOnly: true,
               overviewRulerBorder: false
             }}
             onChange={handleEditorChange}
@@ -144,14 +139,8 @@ function PostView(props) {
             onValidate={handleEditorValidation}
           />
         </div>
-        <div className='d-flex flex-order-1 flex-md-order-none'>
-          <div className='d-flex flex-order-1 flex-md-order-none'>{renderTags()}</div>
-          <div className='d-flex flex-order-1 flex-md-order-none ms-auto mt-2' onClick={navigateToPost}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-box-arrow-up-right text-secondary mx-1" viewBox="0 0 16 16">
-              <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
-              <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
-            </svg>
-          </div>
+        <div className='d-flex'>
+          {renderTags()}
         </div>
       </div>
       {/* <div className='border-bottom border-secondary mt-2'></div> */}

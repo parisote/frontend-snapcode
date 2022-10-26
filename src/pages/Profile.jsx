@@ -5,16 +5,20 @@ import PostView from '../components/PostView';
 import ProfileTopBar from '../components/ProfileTopBar';
 import apiClient from '../services/apiClient';
 import AuthContext from '../context/Auth-context';
-import { sortPosts } from '../utils/utilities';
+import { sortLikedPosts, sortPosts } from '../utils/utilities';
 
 
 const Profile = () => {
     const ctx = useContext(AuthContext)
     const location = useLocation()
-
+    const [toggle, setToggle] = useState(false)
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
+    const [followers, setFollowers] = useState(null)
+    const [followings, setFollowings] = useState(null)
     const [posts, setPosts] = useState(null)
+    const [likedPosts, setLikedPosts] = useState(null)
+
     let userId
 
     if (!location.state) {
@@ -28,25 +32,43 @@ const Profile = () => {
         apiClient.get(`/api/user/${userId}`).then(parseUser)
         apiClient.get(`/api/user/profile/${userId}`).then(parseProfile)
         apiClient.get(`/api/post/user/${userId}`).then(parsePosts)
-        // apiClient.get(`/api/user/following/${ctx.userId}`)
+        apiClient.get(`/api/post/user/liked/${userId}`).then(parseLikedPosts)
+        apiClient.get(`/api/user/followers/${userId}`).then(parseFollowers)
+        apiClient.get(`/api/user/following/${userId}`).then(parseFollowings)
     }, []);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
-    const parsePosts = (res) => setPosts(res.data.post)
+    const parseFollowers = (res) => setFollowers(res.data)
+    const parseFollowings = (res) => setFollowings(res.data)
+    const parsePosts = (res) => setPosts(res.data)
+    const parseLikedPosts = (res) => setLikedPosts(res.data)
 
-    if (!profile || !user || !posts) {
-        return <div className='bg-dark min-vh-100'>loading</div>
+    if ([user, profile, posts, followers, followings, likedPosts].some(e => !e)) {
+        return <div className='bg-dark min-vh-100 text-white'>loading</div>
+    }
+
+    if (!user || !profile || !posts || !likedPosts) {
+        return <div>loading</div>
     }
 
     const data = {
         ...user,
         ...profile,
+        followers: followers,
+        followings: followings
     }
 
     const renderPosts = () => {
         const sortedPosts = sortPosts(posts, 'date')
         return (
-            <>{sortedPosts.map(post => (<PostView user={data} post={post} key={post.id} />))}</>
+            <>{sortedPosts.map(post => (<PostView post={post} key={post.id} />))}</>
+        )
+    }
+
+    const renderLikedPosts = () => {
+        const sortedPosts = sortPosts(likedPosts[0].likedPosts, 'date')
+        return (
+            <>{sortedPosts.map(post => (<PostView post={post} key={post.id} />))}</>
         )
     }
 
@@ -59,10 +81,14 @@ const Profile = () => {
                     <ProfileBar {...data} />
                 </div>
                 <div className="h-card col-md-7 mt-3">
-                    <ProfileTopBar />
-                    {renderPosts()}
-                    {/* {!posts && <p>loading...</p>}
-                    {posts && <p>hay posts</p>} */}
+                    <ProfileTopBar toggle={toggle} setToggle={setToggle} />
+                    {
+                        !toggle ?
+                            renderPosts()
+                            :
+                            toggle &&
+                            renderLikedPosts()
+                    }
                 </div>
             </div>
         </div>
