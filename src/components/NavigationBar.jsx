@@ -8,6 +8,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import AuthContext from '../context/Auth-context';
 import Modal from 'react-bootstrap/Modal';
 import PostEditor from './PostEditor';
+import PostMedia from './PostMedia';
 import apiClient from '../services/apiClient';
 import { profileApi } from '../services/apiClient'
 import truncarString from '../utils/stringUtils';
@@ -19,7 +20,13 @@ function NavigationBar(id) {
 
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
-    const [show, setShow] = useState(false);
+    const [showPost, setShowPost] = useState(false);
+    const [showMedia, setShowMedia] = useState(false);
+
+    const handleClosePost = () => setShowPost(false);
+    const handleShowPost = () => setShowPost(true);
+    const handleCloseMedia = () => setShowMedia(false);
+    const handleShowMedia = () => setShowMedia(true);
 
     const [input, setInput] = useState(false)
     const [showDropdown, setShowDropdown] = useState(false)
@@ -34,9 +41,6 @@ function NavigationBar(id) {
     const handleSerched = (event) => {
         if (event.target) setInput(event.target.value)
     }
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     const handleLogout = (event) => {
         ctx.onLogout()
@@ -126,10 +130,13 @@ function NavigationBar(id) {
                     <Nav>
                         <div className="d-flex align-items-center text-white text-decoration-none">
                             <Dropdown drop='down' align={{ lg: 'end' }} >
-                                <Dropdown.Toggle id="user-menu" variant="black text-white" onClick={handleShow}>
-                                    Nuevo Post
+                                <Dropdown.Toggle id="user-menu" variant="black text-white">
+                                    New
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu variant="dark">
+                                    <Dropdown.Item onClick={handleShowPost}>Code post</Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item onClick={handleShowMedia}>Media post</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
@@ -151,12 +158,20 @@ function NavigationBar(id) {
                     </Nav>
                 </Navbar.Collapse>
             </Container>
-            <Modal size="xl" show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+            <Modal size="xl" show={showPost} onHide={handleClosePost} backdrop="static" keyboard={false}>
                 <Modal.Header className="bg-dark text-white" closeButton>
-                    <Modal.Title className="bg-dark  text-white" >NuevoPost</Modal.Title>
+                    <Modal.Title className="bg-dark  text-white" >Code post</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="bg-dark  text-white">
                     <PostEditor />
+                </Modal.Body>
+            </Modal>
+            <Modal size="xl" show={showMedia} onHide={handleCloseMedia} backdrop="static" keyboard={false}>
+                <Modal.Header className="bg-dark text-white" closeButton>
+                    <Modal.Title className="bg-dark  text-white" >Media post</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="bg-dark  text-white">
+                    <PostMedia />
                 </Modal.Body>
             </Modal>
         </Navbar>
