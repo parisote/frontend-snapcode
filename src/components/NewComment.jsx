@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect} from 'react'
 import AuthContext from '../context/Auth-context';
-
+import { useNavigate } from "react-router-dom"
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,7 +11,10 @@ function NewComment(props) {
   const ctx = useContext(AuthContext)
   const { post } = props
   const [profile, setProfile] = useState(null)
-  const [newComment, setNewComment] = useState(null)
+  const [txtComment, setNewComment] = useState(null)
+  const [error, setError] = useState(false)
+  const [errorMsj, setErrorMsj] = useState()
+  const navigate = useNavigate()
   
   useEffect(() => {
     apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
@@ -29,6 +32,47 @@ function NewComment(props) {
 
   const handleSubmit = async (event) => 
   {
+    event.preventDefault()
+    handleNoError()
+    let newError, errorActual
+    if (!txtComment) {
+      errorActual = " Debe poner un texto en el comentario"
+      newError = newError ? newError + " - " + errorActual : errorActual
+    }
+
+    if (!newError) {
+      const comment = {
+        text: txtComment,
+        imageUrl: "",
+        authorId: ctx.userId
+      }
+
+      let response = await apiClient.post(`/api/post/${post.id}/comment`, comment);
+      if (response.status === 201) {
+        console.log('201')
+        navigate("/post", { state: { post: post } })
+        window.location.reload()
+      }
+
+      else {
+        errorActual = "Error al crear comentario"
+        newError = newError ? newError + " - " + errorActual : errorActual
+      }
+    }
+    else {
+      handleError(newError)
+      event.preventDefault()
+    }
+  }
+
+  const handleError = (error) => {
+    setErrorMsj(error)
+    setError(true)
+  }
+
+  const handleNoError = () => {
+    setErrorMsj("")
+    setError(false)
   }
   return (
     <div className="row gx-0 mt-2 border rounded border-secondary p-2 text-white">

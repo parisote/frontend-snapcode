@@ -13,12 +13,28 @@ const Post = () => {
     const location = useLocation()
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
-    const [post, setPost] = useState(location.state.post)
+    const [post, setPost] = useState(null)
+    //useState(location.state.post)
 
     const data = {
         ...user,
         ...profile,
     }
+
+    useEffect(() => {
+        apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
+        apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
+        apiClient.get(`/api/post/${location.state.post.id}`).then(parsePost)
+    }, []);
+
+    const parseUser = (res) => setUser(res.data)
+    const parseProfile = (res) => setProfile(res.data)
+    const parsePost = (res) => setPost(res.data)
+    console.log(location.state.post.id)
+    console.log(post)
+    if (!profile) {
+        return <></>
+      }
 
     const renderPost = () => {
         return (
@@ -40,13 +56,6 @@ const Post = () => {
         )
     }
 
-    useEffect(() => {
-        apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
-        apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
-    }, []);
-
-    const parseUser = (res) => setUser(res.data)
-    const parseProfile = (res) => setProfile(res.data)
 
     return (
         <div className="d-flex align-items-center justify-content-center bg-black text-light min-vh-100">
