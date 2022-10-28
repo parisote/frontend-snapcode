@@ -168,7 +168,7 @@ const Register = (props) => {
                               <Form.Label>Nombre de usuario</Form.Label>
                               <Form.Control
                                 className="mb-3 bg-dark text-white"
-                                onChange={handleNameChange}
+                                onChange={handleUsernameChange}                                
                                 type="name"
                                 placeholder="J-Doe"
                                 autoFocus
@@ -181,7 +181,7 @@ const Register = (props) => {
                               <Form.Label>Nombre y apellido</Form.Label>
                               <Form.Control
                                 className="mb-3 bg-dark text-white"
-                                onChange={handleUsernameChange}
+                                onChange={handleNameChange}
                                 type="name"
                                 placeholder="Jane doe"
                                 autoFocus
