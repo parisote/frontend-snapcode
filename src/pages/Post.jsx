@@ -32,7 +32,7 @@ const Post = () => {
     const parsePost = (res) => setPost(res.data)
     console.log(location.state.post.id)
     console.log(post)
-    if (!profile) {
+    if (!profile || !post) {
         return <></>
       }
 
