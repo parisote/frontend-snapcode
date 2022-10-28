@@ -3,11 +3,12 @@ import AuthService from '../services/authService'
 import { profileApi } from '../services/apiClient';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
-import { Navigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import Form from 'react-bootstrap/Form';
 
 const Register = (props) => {
 
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -64,7 +65,9 @@ const Register = (props) => {
     if (response.status === 201) {
       handleMsg("Usuario creado. ¡Bienvenido!")
       handleClose();
-      return <Navigate to="/login" />
+      setTimeout(() => {
+      navigate('/login')
+      }, 3000);  
     } else {
       console.log("error")
     }
