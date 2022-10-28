@@ -73,7 +73,7 @@ const Register = (props) => {
     }
 
   }
-
+  
   const handleId = (event) => {
     setId(event)
   }
@@ -195,7 +195,7 @@ const Register = (props) => {
                               <Form.Control
                                 className="mb-3 bg-dark text-white"
                                 onChange={handleBiography}
-                                type="biography"
+                                type="text"
                                 placeholder="About me"
                                 autoFocus
                               />
@@ -205,7 +205,7 @@ const Register = (props) => {
                               <Form.Control
                                 className="mb-3 bg-dark text-white"
                                 onChange={handleWorkingAt}
-                                type="workingAt"
+                                type="text"
                                 placeholder="Google"
                                 autoFocus
                               />
@@ -225,7 +225,7 @@ const Register = (props) => {
                               <Form.Control
                                 className="mb-3 bg-dark text-white"
                                 onChange={handleLinkedin}
-                                type="Linkedin"
+                                type="text"
                                 placeholder="LinkedinUrl"
                                 autoFocus
                               />
@@ -235,7 +235,7 @@ const Register = (props) => {
                               <Form.Control
                                 className="mb-3 bg-dark text-white"
                                 onChange={handleTwitter}
-                                type="Twitter"
+                                type="text"
                                 placeholder="TwitterUrl"
                                 autoFocus
                               />
@@ -252,7 +252,7 @@ const Register = (props) => {
                       </Modal>
 
                       <div className="pt-1 mb-4">
-                        <button className="btn btn-primary" onClick={handleSubmit} type="button">Sign up</button>
+                        <button className="btn btn-primary" onClick={handleSubmit} type="submit">Sign up</button>
                       </div>
 
                       <p className="mb-5 pb-lg-2" style={{ color: 'white' }}>Already registered?

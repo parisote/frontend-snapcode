@@ -80,7 +80,7 @@ const Login = () => {
                         : <></>}
 
                       <div className="pt-1 mb-4">
-                        <button className="btn btn-primary" onClick={handleSubmit} type="button">Login</button>
+                        <button className="btn btn-primary" onClick={handleSubmit} type="submit">Login</button>
                       </div>
 
                       <p className="mb-5 pb-lg-2" style={{ color: 'white' }}>Don't have an account?
