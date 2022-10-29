@@ -5,7 +5,7 @@ import PostView from '../components/PostView';
 import ProfileTopBar from '../components/ProfileTopBar';
 import apiClient from '../services/apiClient';
 import AuthContext from '../context/Auth-context';
-import { sortLikedPosts, sortPosts } from '../utils/utilities';
+import { sortPosts } from '../utils/utilities';
 
 
 const Profile = () => {
@@ -29,13 +29,18 @@ const Profile = () => {
 
     //esto y lo proximo deberia ir idealmente en un hook
     useEffect(() => {
-        apiClient.get(`/api/user/${userId}`).then(parseUser)
-        apiClient.get(`/api/user/profile/${userId}`).then(parseProfile)
-        apiClient.get(`/api/post/user/${userId}`).then(parsePosts)
-        apiClient.get(`/api/post/user/liked/${userId}`).then(parseLikedPosts)
-        apiClient.get(`/api/user/followers/${userId}`).then(parseFollowers)
-        apiClient.get(`/api/user/following/${userId}`).then(parseFollowings)
-    }, []);
+        if (!ctx.token) {
+            return
+        }
+        Promise.all([
+            apiClient.get(`/api/user/${userId}`).then(parseUser),
+            apiClient.get(`/api/user/profile/${userId}`).then(parseProfile),
+            apiClient.get(`/api/post/user/${userId}`).then(parsePosts),
+            apiClient.get(`/api/post/user/liked/${userId}`).then(parseLikedPosts),
+            apiClient.get(`/api/user/followers/${userId}`).then(parseFollowers),
+            apiClient.get(`/api/user/following/${userId}`).then(parseFollowings),
+        ]).catch(() => ctx.onLogout())
+    }, [ctx.token, userId]);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
     const parseFollowers = (res) => setFollowers(res.data)
@@ -47,7 +52,7 @@ const Profile = () => {
         return <div className='bg-dark min-vh-100 text-white'>loading</div>
     }
 
-    if (!user || !profile || !posts || !likedPosts) {
+    if (!user || !profile || !posts || !likedPosts || !followers || !followings) {
         return <div>loading</div>
     }
 

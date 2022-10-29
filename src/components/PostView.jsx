@@ -22,7 +22,7 @@ function PostView(props) {
   const date = new Date(post.createdAt)
 
   const likePost = async () => {
-    const response = await apiClient.post(`/api/user/${ctx.userId}/like/post/${post.id}`)
+    const response = await apiClient.post(`/api/user/${ctx.userId}/like/post/${post.id}`, { headers: { Authorization: `Bearer ${ctx.token}` } })
     if (response.status === 200) {
       if (!liked) {
         setLiked(() => !liked)
@@ -35,7 +35,7 @@ function PostView(props) {
   }
 
   useEffect(() => {
-    apiClient.get(`/api/user/profile/${post.authorId}`).then(parseProfile)
+    apiClient.get(`/api/user/profile/${post.authorId}`, { headers: { Authorization: `Bearer ${ctx.token}` } }).then(parseProfile)
   }, []);
 
   const parseProfile = (res) => setProfile(res.data)

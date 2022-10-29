@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import AuthContext from '../context/Auth-context';
 import '../styles/Access.css'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const Login = () => {
   const ctx = useContext(AuthContext)
@@ -29,7 +29,6 @@ const Login = () => {
     }
     // navigate(from, { replace: true});
     navigate('/profile')
-    window.location.reload()
   }
 
   const handleEmailChange = (event) => {
@@ -58,7 +57,7 @@ const Login = () => {
                 </div>
                 <div className="col-md-6 col-lg-7 d-flex align-items-center bg-dark text-white">
                   <div className="card-body p-4 p-lg-5 bg-dark text-white">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                       <div className="d-flex align-items-center mb-3 pb-1">
                         <i className="fas fa-cubes fa-2x me-3" style={{ color: '#ff6219' }}></i>
                         <span className="h1 fw-bold mb-0 bg-dark text-white">Sign in</span>
@@ -80,7 +79,7 @@ const Login = () => {
                         : <></>}
 
                       <div className="pt-1 mb-4">
-                        <button className="btn btn-primary" onClick={handleSubmit} type="button">Login</button>
+                        <button className="btn btn-primary" type="submit">Login</button>
                       </div>
 
                       <p className="mb-5 pb-lg-2" style={{ color: 'white' }}>Don't have an account?
@@ -94,7 +93,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   )
 }
 

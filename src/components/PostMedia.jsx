@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { postApi } from '../services/apiClient';
+import apiClient from '../services/apiClient';
 import AuthContext from '../context/Auth-context';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -50,7 +50,7 @@ function PostMedia(props) {
       //todavía falta hacer la lógica para poder hacer el post.
       //porque en el back se valida que si el code/language es vacío, no se pueda crear el post.
 
-      let response = await postApi.post("/" + ctx.userId, newPost);
+      let response = await apiClient.post("/api/post" + ctx.userId, newPost);
       if (response.status === 201) {
         console.log('201')
         window.location.reload()

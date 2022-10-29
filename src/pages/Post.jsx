@@ -22,10 +22,12 @@ const Post = () => {
     }
 
     useEffect(() => {
-        apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
-        apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
-        apiClient.get(`/api/post/${location.state.post.id}`).then(parsePost)
-    }, []);
+        Promise.all([
+            apiClient.get(`/api/user/${ctx.userId}`).then(parseUser),
+            apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile),
+            apiClient.get(`/api/post/${location.state.post.id}`).then(parsePost),
+        ]).catch(() => ctx.onLogout())
+    }, [ctx.token]);
 
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
@@ -34,7 +36,7 @@ const Post = () => {
     console.log(post)
     if (!profile || !post) {
         return <></>
-      }
+    }
 
     const renderPost = () => {
         return (

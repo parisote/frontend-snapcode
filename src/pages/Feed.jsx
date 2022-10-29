@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import PostView from '../components/PostView';
 import AuthContext from '../context/Auth-context';
 import apiClient from '../services/apiClient';
-import { sortPosts } from '../utils/utilities';
 const Feed = () => {
 
     const ctx = useContext(AuthContext)
