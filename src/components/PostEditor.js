@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import apiClient, { postApi } from '../services/apiClient';
+import apiClient from '../services/apiClient';
 
 function PostEditor(props) {
   const ctx = useContext(AuthContext)
@@ -94,7 +94,7 @@ function PostEditor(props) {
         language: language,
       }
 
-      let response = await postApi.post("/" + ctx.userId, newPost);
+      let response = await apiClient.post("/api/post/" + ctx.userId, newPost);
       if (response.status === 201) {
         console.log('201')
         window.location.reload()

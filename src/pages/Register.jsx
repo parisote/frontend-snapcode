@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import AuthService from '../services/authService'
-import { profileApi } from '../services/apiClient';
+import apiClient from '../services/apiClient';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom"
 import Form from 'react-bootstrap/Form';
 
-const Register = (props) => {
+const Register = () => {
 
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
@@ -60,7 +60,7 @@ const Register = (props) => {
       twitter: twitter
     };
 
-    let response = await profileApi.post("/update/" + id, newUser);
+    let response = await apiClient.post("/api/user/profile/update" + id, newUser);
 
     if (response.status === 201) {
       handleMsg("Usuario creado. ¡Bienvenido!")
@@ -171,7 +171,7 @@ const Register = (props) => {
                               <Form.Label>Nombre de usuario</Form.Label>
                               <Form.Control
                                 className="mb-3 bg-dark text-white"
-                                onChange={handleUsernameChange}                                
+                                onChange={handleUsernameChange}
                                 type="name"
                                 placeholder="J-Doe"
                                 autoFocus

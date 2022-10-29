@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import PostView from '../components/PostView';
 import AuthContext from '../context/Auth-context';
 import apiClient from '../services/apiClient';
-import { sortPosts } from '../utils/utilities';
 const Trending = () => {
 
     const ctx = useContext(AuthContext)
@@ -12,13 +11,6 @@ const Trending = () => {
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
     const [posts, setPosts] = useState(null)
-    let userId
-
-    if (!location.state) {
-        userId = ctx.userId
-    } else {
-        userId = location.state.id
-    }
 
     const data = {
         ...user,
@@ -33,11 +25,20 @@ const Trending = () => {
 
     //esto y lo proximo deberia ir idealmente en un hook
     useEffect(() => {
-        apiClient.get(`/api/user/${userId}`).then(parseUser)
-        apiClient.get(`/api/user/profile/${userId}`).then(parseProfile)
-        apiClient.get(`/api/trending`).then(parsePosts)
-        // apiClient.get(`/api/user/following/${ctx.userId}`)
-    }, []);
+        let userId
+
+        if (!location.state) {
+            userId = ctx.userId
+        } else {
+            userId = location.state.id
+        }
+
+        Promise.all([
+            apiClient.get(`/api/user/${userId}`).then(parseUser),
+            apiClient.get(`/api/user/profile/${userId}`).then(parseProfile),
+            apiClient.get(`/api/trending`).then(parsePosts),
+        ]).catch(() => ctx.onLogout())
+    }, [ctx.token]);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
     const parsePosts = (res) => setPosts(res.data)
