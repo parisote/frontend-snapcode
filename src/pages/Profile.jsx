@@ -6,11 +6,17 @@ import ProfileTopBar from '../components/ProfileTopBar';
 import apiClient from '../services/apiClient';
 import AuthContext from '../context/Auth-context';
 import { sortPosts } from '../utils/utilities';
+import ProfileForm from '../components/ProfileForm';
 
 
 const Profile = () => {
     const ctx = useContext(AuthContext)
     const location = useLocation()
+
+    const [show, setShow] = useState(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     const [toggle, setToggle] = useState(false)
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
@@ -39,7 +45,14 @@ const Profile = () => {
             apiClient.get(`/api/post/user/liked/${userId}`).then(parseLikedPosts),
             apiClient.get(`/api/user/followers/${userId}`).then(parseFollowers),
             apiClient.get(`/api/user/following/${userId}`).then(parseFollowings),
-        ]).catch(() => ctx.onLogout())
+        ]).catch((error) => {
+            if (error.response.status === 401) {
+                ctx.onLogout()
+            }
+            if (error.response.status === 500) {
+                setProfile(() => 500)
+            }
+        })
     }, [ctx.token, userId]);
     const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
@@ -48,19 +61,30 @@ const Profile = () => {
     const parsePosts = (res) => setPosts(res.data)
     const parseLikedPosts = (res) => setLikedPosts(res.data)
 
-    if ([user, profile, posts, followers, followings, likedPosts].some(e => !e)) {
-        return <div className='bg-dark min-vh-100 text-white'>loading</div>
-    }
-
-    if (!user || !profile || !posts || !likedPosts || !followers || !followings) {
-        return <div>loading</div>
-    }
-
     const data = {
         ...user,
         ...profile,
         followers: followers,
         followings: followings
+    }
+
+    if (profile === 500 && user) {
+        const data1 = {
+            userId: user.id,
+            username: '',
+            name: '',
+            biography: '',
+            workingAt: '',
+            location: '',
+            linkedIn: '',
+            twitter: '',
+        }
+
+        return <div className='bg-dark min-vh-100'><ProfileForm show={show} handleClose={handleClose} data={data1} /></div>
+    }
+
+    if ([user, profile, posts, followers, followings, likedPosts].some(e => !e)) {
+        return <div className='bg-dark min-vh-100 text-white'>loading</div>
     }
 
     const renderPosts = () => {

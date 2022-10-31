@@ -59,6 +59,9 @@ function PostView(props) {
   }
 
   const renderTags = () => {
+    if (!post.tags) {
+      return <></>
+    }
     const tags = post.tags.split(',')
     return (
       <>{tags.map(name => (<Tag text={name} key={name} />))}</>
