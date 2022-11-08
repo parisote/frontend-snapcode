@@ -83,7 +83,7 @@ function PostView(props) {
           </p>
           <p className='mt-2 text-secondary'>/</p>
           <p className='mx-1 mt-2 fw-bold text-info'>
-            Filename.ext
+            {post.code.filename}
           </p>
           <p className='mx-1 fw-light fst-italic' style={{ fontSize: '0.8em', marginTop: '12px' }}>
             {date.toLocaleDateString() + ' - ' + date.toLocaleTimeString()}

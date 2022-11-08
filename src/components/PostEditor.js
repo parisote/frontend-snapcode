@@ -94,6 +94,8 @@ function PostEditor(props) {
         language: language,
       }
 
+      console.log(newPost)
+
       let response = await apiClient.post("/api/post/" + ctx.userId, newPost);
       if (response.status === 201) {
         console.log('201')
