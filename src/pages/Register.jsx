@@ -12,6 +12,7 @@ const Register = () => {
   const [email, setEmail] = useState(null)
   const [id, setId] = useState(null)
   const [password, setPassword] = useState(null)
+  const [confirmPassword, setConfirmPassword] = useState(null)
   const [username, setUsername] = useState(null)
   const [name, setName] = useState(null)
   const [location, setLocation] = useState(null)
@@ -26,10 +27,16 @@ const Register = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!email || !password) {
-      handleError("Must enter email and password")
+    if (!email || !password || !confirmPassword) {
+      handleError("Must enter email and confirm password")
       return
     }
+
+    if (password != confirmPassword) {
+      handleError("Passwords must match")
+      return
+    }
+
     const response = await AuthService.register(email, password);
     if (response.status === 201) {
       const id = response.data.id.toString();
@@ -53,6 +60,10 @@ const Register = () => {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value)
+  }
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value)
   }
 
   const handleMsg = (msg) => {
@@ -93,6 +104,11 @@ const Register = () => {
                       <div className="form-outline mb-4">
                         <input type="password" onChange={handlePasswordChange} className="form-control form-control-lg bg-dark text-white" />
                         <label className="form-label bg-dark text-white" >Password</label>
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <input type="password" onChange={handleConfirmPasswordChange} className="form-control form-control-lg bg-dark text-white" />
+                        <label className="form-label bg-dark text-white" >Confirm password</label>
                       </div>
 
                       {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
