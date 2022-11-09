@@ -63,7 +63,7 @@ const Register = () => {
   }
 
   const handleMsg = (msg) => {
-    setSuccessMsg(msg)
+    toast.success(msg)
     setMsg(true)
   }
 
@@ -108,10 +108,7 @@ const Register = () => {
                         <label className="form-label bg-dark text-white" >Confirm password</label>
                       </div>
 
-                      {msg ? <div class="alert alert-success" role="alert"> {successMsg} </div>
-                        : <></>}
-
-                      {error? <ToastContainer autoClose={3000}/> : <></>}
+                      {error || msg? <ToastContainer autoClose={3000}/> : <></>}
 
                       <div className="pt-1 mb-4">
                         <button className="btn btn-primary" onClick={handleSubmit} type="submit">Sign up</button>
