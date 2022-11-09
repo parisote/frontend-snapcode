@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import PostView from '../components/PostView';
 import AuthContext from '../context/Auth-context';
 import apiClient from '../services/apiClient';
-import { sortPosts } from '../utils/utilities';
 const Feed = () => {
 
     const ctx = useContext(AuthContext)
@@ -26,6 +25,9 @@ const Feed = () => {
     }
 
     const renderPosts = () => {
+        if (posts.length < 1) {
+            return (<div className='text-white fs-1 mx-4 mt-5'>Start following people to lighten up your feed!</div>)
+        }
         return (
             <>{posts.map(post => (<PostView user={data} post={post} key={post.id} />))}</>
         )

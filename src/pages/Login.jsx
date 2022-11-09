@@ -1,20 +1,17 @@
 import React, { useContext, useState } from 'react'
 import AuthContext from '../context/Auth-context';
 import '../styles/Access.css'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const ctx = useContext(AuthContext)
-
   const navigate = useNavigate();
-  const location = useLocation();
-  // let { from } = location.state || { from: { pathname: "/" } };
-
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
   const [error, setError] = useState(false)
-  const [errorMsj, setErrorMsj] = useState()
-
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -27,9 +24,7 @@ const Login = () => {
       handleError("Incorrect email or password")
       return
     }
-    // navigate(from, { replace: true});
     navigate('/profile')
-    window.location.reload()
   }
 
   const handleEmailChange = (event) => {
@@ -41,12 +36,12 @@ const Login = () => {
   }
 
   const handleError = (error) => {
-    setErrorMsj(error)
+    toast.error(error)
     setError(true)
   }
 
   return (
-    <section className="vh-100" style={{ backgroundColor: '#53504F' }}>
+    <section className="overflow-auto vh-100 vw-100" style={{ backgroundColor: '#53504F' }}>
       <div className="container py-5 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
@@ -58,7 +53,7 @@ const Login = () => {
                 </div>
                 <div className="col-md-6 col-lg-7 d-flex align-items-center bg-dark text-white">
                   <div className="card-body p-4 p-lg-5 bg-dark text-white">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                       <div className="d-flex align-items-center mb-3 pb-1">
                         <i className="fas fa-cubes fa-2x me-3" style={{ color: '#ff6219' }}></i>
                         <span className="h1 fw-bold mb-0 bg-dark text-white">Sign in</span>
@@ -76,11 +71,10 @@ const Login = () => {
                         <label className="form-label" >Password</label>
                       </div>
 
-                      {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
-                        : <></>}
+                      {error ? <ToastContainer position="bottom-center" autoClose={3000}/> : <></>}
 
                       <div className="pt-1 mb-4">
-                        <button className="btn btn-primary" onClick={handleSubmit} type="button">Login</button>
+                        <button className="btn btn-primary" type="submit">Login</button>
                       </div>
 
                       <p className="mb-5 pb-lg-2" style={{ color: 'white' }}>Don't have an account?
@@ -94,7 +88,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   )
 }
 

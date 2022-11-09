@@ -22,7 +22,7 @@ function PostView(props) {
   const date = new Date(post.createdAt)
 
   const likePost = async () => {
-    const response = await apiClient.post(`/api/user/${ctx.userId}/like/post/${post.id}`)
+    const response = await apiClient.post(`/api/user/${ctx.userId}/like/post/${post.id}`, { headers: { Authorization: `Bearer ${ctx.token}` } })
     if (response.status === 200) {
       if (!liked) {
         setLiked(() => !liked)
@@ -35,7 +35,7 @@ function PostView(props) {
   }
 
   useEffect(() => {
-    apiClient.get(`/api/user/profile/${post.authorId}`).then(parseProfile)
+    apiClient.get(`/api/user/profile/${post.authorId}`, { headers: { Authorization: `Bearer ${ctx.token}` } }).then(parseProfile)
   }, []);
 
   const parseProfile = (res) => setProfile(res.data)
@@ -61,6 +61,9 @@ function PostView(props) {
   }
 
   const renderTags = () => {
+    if (!post.tags) {
+      return <></>
+    }
     const tags = post.tags.split(',')
     return (
       <>{tags.map(name => (<Tag text={name} key={name} />))}</>
@@ -86,7 +89,7 @@ function PostView(props) {
           </p>
           <p className='mt-2 text-secondary'>/</p>
           <p className='mx-1 mt-2 fw-bold text-info'>
-            Filename.ext
+            {post.code.filename}
           </p>
           <p className='mx-1 fw-light fst-italic' style={{ fontSize: '0.8em', marginTop: '12px' }}>
             {date.toLocaleDateString() + ' - ' + date.toLocaleTimeString()}

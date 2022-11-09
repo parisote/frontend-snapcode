@@ -1,13 +1,7 @@
 import React, { useState } from 'react'
 import authService from '../services/authService'
 
-const AuthContext = React.createContext({
-    userId: null,
-    token: null,
-    isAuth: () => { },
-    onLogin: (body) => { },
-    onLogout: () => { }
-})
+const AuthContext = React.createContext(null)
 
 export const AuthContextProvider = (props) => {
 

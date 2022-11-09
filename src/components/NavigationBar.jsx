@@ -10,7 +10,6 @@ import Modal from 'react-bootstrap/Modal';
 import PostEditor from './PostEditor';
 import PostMedia from './PostMedia';
 import apiClient from '../services/apiClient';
-import { profileApi } from '../services/apiClient'
 import truncarString from '../utils/stringUtils';
 
 function NavigationBar(id) {
@@ -18,7 +17,6 @@ function NavigationBar(id) {
     const ctx = useContext(AuthContext)
     const navigate = useNavigate()
 
-    const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
     const [showPost, setShowPost] = useState(false);
     const [showMedia, setShowMedia] = useState(false);
@@ -34,7 +32,6 @@ function NavigationBar(id) {
 
     const goToUserProfile = (id) => {
         navigate("/profile", { state: { id } })
-        window.location.reload()
         setShowDropdown(false)
     }
 
@@ -48,7 +45,7 @@ function NavigationBar(id) {
     }
 
     const navigateHome = (event) => {
-        navigate("/home")
+        navigate("/feed")
     }
 
     const navigateTrending = (event) => {
@@ -56,22 +53,21 @@ function NavigationBar(id) {
     }
 
     const navigateProfile = (event) => {
-        navigate("/profile", { state: { id: ctx.userId } })
-        window.location.reload()
+        navigate("/profile")
     }
 
     useEffect(() => {
-        apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
+        // apiClient.get(`/api/user/${ctx.userId}`).then(parseUser)
         apiClient.get(`/api/user/profile/${ctx.userId}`).then(parseProfile)
     }, []);
-    const parseUser = (res) => setUser(res.data)
+    // const parseUser = (res) => setUser(res.data)
     const parseProfile = (res) => setProfile(res.data)
 
     useEffect(() => {
         const identifier = setTimeout(() => {
             handleSerched(input)
             if (input) {
-                profileApi.get(`search/${input}`).then((res) => setUsers(res.data))
+                apiClient.get(`api/user/profile/search/${input}`).then((res) => setUsers(res.data))
                 setShowDropdown(true)
             }
         }, 500)
@@ -82,8 +78,8 @@ function NavigationBar(id) {
         }
     }, [input])
 
-    if (!profile || !user) {
-        return <div className='bg-dark min-vh-100'>loading</div>
+    if (!profile) {
+        return <></>
     }
 
     return (
@@ -105,7 +101,7 @@ function NavigationBar(id) {
                             <div className="list-group position-absolute top-100 start-0" >
                                 {users.map((user) => {
                                     return (
-                                        <a onClick={() => goToUserProfile(user.userId)} href='#' key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">
+                                        <a onClick={() => goToUserProfile(user.userId)} key={user.userId} className="list-group-item list-group-item-action d-flex bg-dark text-light">
                                             <img className='rounded-circle me-2' src={user.image} style={{ maxHeight: '40px' }} />
                                             <span className='align-self-center'>{truncarString(user.username)}</span>
                                         </a>

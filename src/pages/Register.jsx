@@ -1,85 +1,45 @@
 import React, { useState } from 'react'
 import AuthService from '../services/authService'
-import { profileApi } from '../services/apiClient';
+import apiClient from '../services/apiClient';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
-import { Navigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import Form from 'react-bootstrap/Form';
 
-const Register = (props) => {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+const Register = () => {
+
+  const navigate = useNavigate();
   const [email, setEmail] = useState(null)
-  const [id, setId] = useState(null)
   const [password, setPassword] = useState(null)
-  const [username, setUsername] = useState(null)
-  const [name, setName] = useState(null)
-  const [location, setLocation] = useState(null)
-  const [twitter, setTwitter] = useState(null)
-  const [workingAt, setWorkingAt] = useState(null)
-  const [biography, setBiography] = useState(null)
-  const [linkedin, setLinkedin] = useState(null)
+  const [confirmPassword, setConfirmPassword] = useState(null)
   const [error, setError] = useState(false)
-  const [errorMsj, setErrorMsj] = useState()
   const [msg, setMsg] = useState(false)
-  const [successMsg, setSuccessMsg] = useState()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!email || !password) {
-      handleError("Must enter email and password")
+    if (!email || !password || !confirmPassword) {
+      handleError("Must enter email and confirm password")
       return
     }
+
+    if (password != confirmPassword) {
+      handleError("Passwords must match")
+      return
+    }
+
     const response = await AuthService.register(email, password);
     if (response.status === 201) {
       const id = response.data.id.toString();
-      handleId(id)
-      handleShow();
+      handleMsg("User created successfully. Welcome aboard!")
+      setTimeout(() => {
+        navigate('/login')
+      }, 3000);
     } else {
-      console.log("error")
+      handleError("An error has occurred, please try again later")
     }
-  }
-
-  const handleUser = async (event) => {
-    event.preventDefault()
-    if (!username || !name) {
-      handleError("Must enter your name and username")
-      return
-    }
-
-    const newUser = {
-      name: name,
-      username: username,
-      biography: biography,
-      workingAt: workingAt,
-      location: location,
-      linkedIn: linkedin,
-      twitter: twitter
-    };
-
-    let response = await profileApi.post("/update/" + id, newUser);
-
-    if (response.status === 201) {
-      handleMsg("Usuario creado. ¡Bienvenido!")
-      handleClose();
-      return <Navigate to="/login" />
-    } else {
-      console.log("error")
-    }
-
-  }
-
-  const handleId = (event) => {
-    setId(event)
-  }
-  const handleNameChange = (event) => {
-    setName(event.target.value.trim())
-  }
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value.trim())
   }
 
   const handleEmailChange = (event) => {
@@ -90,37 +50,22 @@ const Register = (props) => {
     setPassword(event.target.value)
   }
 
-  const handleBiography = (event) => {
-    setBiography(event.target.value)
-  }
-
-  const handleWorkingAt = (event) => {
-    setWorkingAt(event.target.value)
-  }
-
-  const handleLocation = (event) => {
-    setLocation(event.target.value)
-  }
-
-  const handleLinkedin = (event) => {
-    setLinkedin(event.target.value)
-  }
-
-  const handleTwitter = (event) => {
-    setTwitter(event.target.value)
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value)
   }
 
   const handleMsg = (msg) => {
-    setSuccessMsg(msg)
+    toast.success(msg)
     setMsg(true)
   }
 
   const handleError = (error) => {
-    setErrorMsj(error)
+    toast.error(error)
     setError(true)
   }
+  
   return (
-    <section className="vh-100 " style={{ backgroundColor: '#53504F' }}>
+    <section className="overflow-auto vh-100 vw-100" style={{ backgroundColor: '#53504F' }}>
       <div className="container py-5 h-100 ">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
@@ -150,106 +95,15 @@ const Register = (props) => {
                         <label className="form-label bg-dark text-white" >Password</label>
                       </div>
 
-                      {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
-                        : <></>}
-                      {msg ? <div class="alert alert-success" role="alert"> {successMsg} </div>
-                        : <></>}
+                      <div className="form-outline mb-4">
+                        <input type="password" onChange={handleConfirmPasswordChange} className="form-control form-control-lg bg-dark text-white" />
+                        <label className="form-label bg-dark text-white" >Confirm password</label>
+                      </div>
 
-                      <Modal show={show} onHide={handleClose}>
-                        <Modal.Header className="bg-dark text-white" closeButton>
-                          <Modal.Title className="bg-dark text-white">Datos personales</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body className="bg-dark text-white">
-                          <p>
-                            Para terminar, le pediremos que ingrese unos últimos datos para finalizar el registro.
-                          </p>
-                          <Form>
-                            <Form.Group className="mb-3" controlId="username">
-                              <Form.Label>Nombre de usuario</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleNameChange}
-                                type="name"
-                                placeholder="J-Doe"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group
-                              className="mb-3"
-                              controlId="name"
-                            >
-                              <Form.Label>Nombre y apellido</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleUsernameChange}
-                                type="name"
-                                placeholder="Jane doe"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="biography">
-                              <Form.Label>Biografía (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleBiography}
-                                type="biography"
-                                placeholder="About me"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="workingAt">
-                              <Form.Label>Lugar de trabajo (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleWorkingAt}
-                                type="workingAt"
-                                placeholder="Google"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3 bg-dark text-white" controlId="place">
-                              <Form.Label>Localidad, País (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleLocation}
-                                type="place"
-                                placeholder="Buenos Aires, Argentina"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="Linkedin">
-                              <Form.Label>Linkedin (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleLinkedin}
-                                type="Linkedin"
-                                placeholder="LinkedinUrl"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="Twitter">
-                              <Form.Label>Twitter (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleTwitter}
-                                type="Twitter"
-                                placeholder="TwitterUrl"
-                                autoFocus
-                              />
-                            </Form.Group>
-                          </Form>
-                        </Modal.Body>
-                        <Modal.Footer className="bg-dark text-white">
-                          <Button variant="primary" onClick={handleUser}>
-                            Confirmar
-                          </Button>
-                          {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
-                            : <></>}
-                        </Modal.Footer >
-                      </Modal>
+                      {error || msg? <ToastContainer position="bottom-center" autoClose={3000}/> : <></>}
 
                       <div className="pt-1 mb-4">
-                        <button className="btn btn-primary" onClick={handleSubmit} type="button">Sign up</button>
+                        <button className="btn btn-primary" onClick={handleSubmit} type="submit">Sign up</button>
                       </div>
 
                       <p className="mb-5 pb-lg-2" style={{ color: 'white' }}>Already registered?

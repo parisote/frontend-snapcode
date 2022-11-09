@@ -1,4 +1,4 @@
-import { Button } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import React, { useContext, useState, useEffect } from 'react'
 import AuthContext from '../context/Auth-context';
 import ProfileForm from './ProfileForm';
@@ -6,19 +6,63 @@ import apiClient from '../services/apiClient';
 
 function ProfileBar(data) {
   const ctx = useContext(AuthContext)
+  const [followCount, setFollowCount] = useState(data.followers.length)
   const [following, setFollowing] = useState(false)
+  const [selectedFile, setSelectedFile] = useState();
   const [show, setShow] = useState(false)
+  const [show2, setShow2] = useState(false);
 
   const handleClose = () => setShow(false);
-
   const handleShow = () => setShow(true);
+
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(() => {
+    if (data.userId === ctx.userId) {
+      return true
+    }
+    return false
+  });
 
   const handleFollow = async () => {
     try {
-      await apiClient.post(`/api/user/follow/${ctx.userId}/${data.userId}`)
-      setFollowing(() => !following)
+      const response = await apiClient.post(`/api/user/follow/${ctx.userId}/${data.userId}`)
+
+      if (response.data === 'user_unfollowed') {
+        setFollowCount(() => followCount - 1)
+        setFollowing(() => !following)
+      }
+
+      if (response.data === 'user_followed') {
+        setFollowCount(() => followCount + 1)
+        setFollowing(() => !following)
+      }
+
     } catch (error) {
       throw error
+    }
+  }
+
+  const handleFile = (e) => {
+    if (!e.currentTarget.files) {
+      return;
+    }
+
+    setSelectedFile(e.currentTarget.files[0]);
+  };
+
+  const uploadPfp = async (event) => {
+    event.preventDefault()
+
+    const formData = new FormData()
+
+    formData.append('image', selectedFile)
+
+    try {
+      const result = await apiClient.post((`/api/user/avatar/upload/${ctx.userId}`), formData)
+      setShow2(false)
+      window.location.reload()
+    } catch (err) {
+      console.error(err.response.data.message)
     }
   }
 
@@ -26,7 +70,7 @@ function ProfileBar(data) {
     if (ctx.userId !== data.userId) {
       apiClient.get(`/api/user/followers/${data.userId}`).then(parseFollowers)
     }
-  }, []);
+  }, [data.userId]);
   const parseFollowers = (res) => {
     const isFollowing = res.data.find(e => e.followingId === ctx.userId)
     if (isFollowing) setFollowing(() => true)
@@ -34,8 +78,30 @@ function ProfileBar(data) {
 
   return (
     <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-black min-vh-100">
-      <div className="d-flex text-white ">
-        <img className='rounded-circle me-2' src={`https://vsa-bucket-test.s3.sa-east-1.amazonaws.com/${data.pfp}`} alt='alt' style={{ width: '90%', border: '2px solid #404040' }} ></img>
+      <Modal
+        show={show2}
+        onHide={handleClose2}
+        backdrop="static"
+        backdropClassName="bg-dark opacity-25"
+        contentClassName="bg-dark text-white"
+        keyboard={false}
+      >
+        <Modal.Header closeButton closeVariant='white'>
+          <Modal.Title>Upload new profile picture.</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form className="w-100" onSubmit={uploadPfp}>
+            <div className='d-flex bd-highlight mt-2'>
+              <br></br>
+              <input type="file" id="image" name="image" accept="image/png, image/jpeg" onChange={handleFile}
+                className='p-2 bd-highlight' />
+              <button type="submit" className="btn btn-info btn-sm rounded-pill ms-auto mx-2 bd-highlight text-white fw-bolder">Upload</button>
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
+      <div className="d-flex text-white">
+        <img className='rounded-circle me-2' src={`https://vsa-bucket-test.s3.sa-east-1.amazonaws.com/${data.pfp}`} alt='alt' style={{ width: '90%', border: '2px solid #404040' }} onClick={handleShow2} ></img>
       </div>
       <div className='fs-2 text-white mt-3'>
         {data.name}
@@ -50,7 +116,7 @@ function ProfileBar(data) {
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-people text-secondary" viewBox="0 0 16 16">
           <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
         </svg>
-        <p className='fs-6 mx-1'>{data.followers.length}</p>
+        <p className='fs-6 mx-1'>{followCount}</p>
         <p className='fs-6 text-secondary'>followers</p>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-dot text-secondary" viewBox="0 0 16 16">
           <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
@@ -83,13 +149,13 @@ function ProfileBar(data) {
             <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" className="bi bi-linkedin text-secondary" viewBox="0 0 16 13">
               <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
             </svg>
-            <p className='fs-6 mx-1 fw-light'>{data.linkedIn}</p>
+            <a className='text-reset fs-6 mx-1 fw-light mb-2' href={'https://www.linkedin.com/in/' + data.linked}>linkedin.com/in/{data.linkedIn}</a>
           </li>
           <li className='d-flex flex-order-1 flex-md-order-none'>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-twitter text-secondary" viewBox="0 0 16 14">
               <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
             </svg>
-            <p className='fs-6 mx-1 fw-light'>{data.twitter}</p>
+            <a className='text-reset fs-6 mx-1 fw-light mb-2' href={'https://twitter.com/' + data.twitter}>twitter.com/{data.twitter}</a>
           </li>
         </ul>
       </div>
