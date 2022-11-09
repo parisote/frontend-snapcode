@@ -12,13 +12,6 @@ const Register = () => {
   const [email, setEmail] = useState(null)
   const [id, setId] = useState(null)
   const [password, setPassword] = useState(null)
-  const [username, setUsername] = useState(null)
-  const [name, setName] = useState(null)
-  const [location, setLocation] = useState(null)
-  const [twitter, setTwitter] = useState(null)
-  const [workingAt, setWorkingAt] = useState(null)
-  const [biography, setBiography] = useState(null)
-  const [linkedin, setLinkedin] = useState(null)
   const [error, setError] = useState(false)
   const [errorMsj, setErrorMsj] = useState()
   const [msg, setMsg] = useState(false)
@@ -27,19 +20,19 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (!email || !password) {
-      handleError("Must enter email and password")
+      handleError("Must enter email and password.")
       return
     }
     const response = await AuthService.register(email, password);
     if (response.status === 201) {
       const id = response.data.id.toString();
       handleId(id)
-      handleMsg("Usuario creado. ¡Bienvenido!")
+      handleMsg("User created successfully. Welcome aboard!")
       setTimeout(() => {
         navigate('/login')
       }, 3000);
     } else {
-      console.log("error")
+      handleError("An error has occurred, please try again later.")
     }
   }
 

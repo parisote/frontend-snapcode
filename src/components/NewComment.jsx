@@ -21,7 +21,6 @@ function NewComment(props) {
   }, []);
 
   const parseProfile = (res) => setProfile(res.data)
-  console.log(profile)
 
   if (!profile) {
     return <></>
@@ -87,6 +86,8 @@ function NewComment(props) {
             </div>
             <Col sm={12} className="p-1"> <Form.Control as="textarea" onChange={handleCommentChange} id="text" className='bg-black text-white square border-secondary' rows={4} style={{ fontSize: 11 }} placeholder="Leave a comment" size="sm" /> </Col>
             <Col sm={12} className='d-flex justify-content-end'><Button className='border-secondary' sm={12} size="sm" variant="success" type="submit">Comment</Button></Col>
+            {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
+                        : <></>}
           </Form.Group>
         </Row>
       </Form>
