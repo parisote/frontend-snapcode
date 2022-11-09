@@ -12,7 +12,6 @@ const Login = () => {
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
   const [error, setError] = useState(false)
-  const [errorMsj, setErrorMsj] = useState()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -72,7 +71,7 @@ const Login = () => {
                         <label className="form-label" >Password</label>
                       </div>
 
-                      {error ? <ToastContainer autoClose={3000}/> : <></>}
+                      {error ? <ToastContainer position="bottom-center" autoClose={3000}/> : <></>}
 
                       <div className="pt-1 mb-4">
                         <button className="btn btn-primary" type="submit">Login</button>

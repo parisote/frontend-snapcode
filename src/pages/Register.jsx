@@ -13,13 +13,10 @@ const Register = () => {
 
   const navigate = useNavigate();
   const [email, setEmail] = useState(null)
-  const [id, setId] = useState(null)
   const [password, setPassword] = useState(null)
   const [confirmPassword, setConfirmPassword] = useState(null)
   const [error, setError] = useState(false)
-  const [errorMsj, setErrorMsj] = useState()
   const [msg, setMsg] = useState(false)
-  const [successMsg, setSuccessMsg] = useState()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -36,7 +33,6 @@ const Register = () => {
     const response = await AuthService.register(email, password);
     if (response.status === 201) {
       const id = response.data.id.toString();
-      handleId(id)
       handleMsg("User created successfully. Welcome aboard!")
       setTimeout(() => {
         navigate('/login')
@@ -44,10 +40,6 @@ const Register = () => {
     } else {
       handleError("An error has occurred, please try again later")
     }
-  }
-
-  const handleId = (event) => {
-    setId(event)
   }
 
   const handleEmailChange = (event) => {
@@ -108,7 +100,7 @@ const Register = () => {
                         <label className="form-label bg-dark text-white" >Confirm password</label>
                       </div>
 
-                      {error || msg? <ToastContainer autoClose={3000}/> : <></>}
+                      {error || msg? <ToastContainer position="bottom-center" autoClose={3000}/> : <></>}
 
                       <div className="pt-1 mb-4">
                         <button className="btn btn-primary" onClick={handleSubmit} type="submit">Sign up</button>
