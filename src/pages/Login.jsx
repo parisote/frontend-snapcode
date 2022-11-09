@@ -1,20 +1,15 @@
 import React, { useContext, useState } from 'react'
 import AuthContext from '../context/Auth-context';
 import '../styles/Access.css'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const ctx = useContext(AuthContext)
-
   const navigate = useNavigate();
-  const location = useLocation();
-  // let { from } = location.state || { from: { pathname: "/" } };
-
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
   const [error, setError] = useState(false)
   const [errorMsj, setErrorMsj] = useState()
-
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -27,7 +22,6 @@ const Login = () => {
       handleError("Incorrect email or password")
       return
     }
-    // navigate(from, { replace: true});
     navigate('/profile')
   }
 
