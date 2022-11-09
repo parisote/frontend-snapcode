@@ -28,7 +28,7 @@ const AppRoutes = () => {
                         <Route path="/post" element={<Post />} />
                         <Route path="/trending" element={<Trending />} />
                         <Route path="/profile" element={<Profile />} />
-                        <Route path="*" element={<Navigate to="/feed" />} replace />
+                        <Route path="*" element={<Navigate to="/profile" />} replace />
                     </>
                 }
             </Routes>

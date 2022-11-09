@@ -9,9 +9,6 @@ import Form from 'react-bootstrap/Form';
 const Register = () => {
 
   const navigate = useNavigate();
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const [email, setEmail] = useState(null)
   const [id, setId] = useState(null)
   const [password, setPassword] = useState(null)
@@ -44,52 +41,17 @@ const Register = () => {
     if (response.status === 201) {
       const id = response.data.id.toString();
       handleId(id)
-      handleShow();
-    } else {
-      console.log("error")
-    }
-  }
-
-  const handleUser = async (event) => {
-    event.preventDefault()
-    if (!username || !name) {
-      handleError("Must enter your name and username")
-      return
-    }
-
-    const newUser = {
-      name: name,
-      username: username,
-      biography: biography,
-      workingAt: workingAt,
-      location: location,
-      linkedIn: linkedin,
-      twitter: twitter
-    };
-
-    let response = await apiClient.post("/api/user/profile/update" + id, newUser);
-
-    if (response.status === 201) {
       handleMsg("Usuario creado. ¡Bienvenido!")
-      handleClose();
       setTimeout(() => {
-      navigate('/login')
-      }, 3000);  
+        navigate('/login')
+      }, 3000);
     } else {
       console.log("error")
     }
-
   }
-  
+
   const handleId = (event) => {
     setId(event)
-  }
-  const handleNameChange = (event) => {
-    setName(event.target.value.trim())
-  }
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value.trim())
   }
 
   const handleEmailChange = (event) => {
@@ -102,26 +64,6 @@ const Register = () => {
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value)
-  }
-
-  const handleBiography = (event) => {
-    setBiography(event.target.value)
-  }
-
-  const handleWorkingAt = (event) => {
-    setWorkingAt(event.target.value)
-  }
-
-  const handleLocation = (event) => {
-    setLocation(event.target.value)
-  }
-
-  const handleLinkedin = (event) => {
-    setLinkedin(event.target.value)
-  }
-
-  const handleTwitter = (event) => {
-    setTwitter(event.target.value)
   }
 
   const handleMsg = (msg) => {
@@ -173,100 +115,6 @@ const Register = () => {
                         : <></>}
                       {msg ? <div class="alert alert-success" role="alert"> {successMsg} </div>
                         : <></>}
-
-                      <Modal show={show} onHide={handleClose}>
-                        <Modal.Header className="bg-dark text-white" closeButton>
-                          <Modal.Title className="bg-dark text-white">Datos personales</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body className="bg-dark text-white">
-                          <p>
-                            Para terminar, le pediremos que ingrese unos últimos datos para finalizar el registro.
-                          </p>
-                          <Form>
-                            <Form.Group className="mb-3" controlId="username">
-                              <Form.Label>Nombre de usuario</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleUsernameChange}
-                                type="name"
-                                placeholder="J-Doe"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group
-                              className="mb-3"
-                              controlId="name"
-                            >
-                              <Form.Label>Nombre y apellido</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleNameChange}
-                                type="name"
-                                placeholder="Jane doe"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="biography">
-                              <Form.Label>Biografía (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleBiography}
-                                type="text"
-                                placeholder="About me"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="workingAt">
-                              <Form.Label>Lugar de trabajo (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleWorkingAt}
-                                type="text"
-                                placeholder="Google"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3 bg-dark text-white" controlId="place">
-                              <Form.Label>Localidad, País (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleLocation}
-                                type="place"
-                                placeholder="Buenos Aires, Argentina"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="Linkedin">
-                              <Form.Label>Linkedin (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleLinkedin}
-                                type="text"
-                                placeholder="LinkedinUrl"
-                                autoFocus
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="Twitter">
-                              <Form.Label>Twitter (Opcional)</Form.Label>
-                              <Form.Control
-                                className="mb-3 bg-dark text-white"
-                                onChange={handleTwitter}
-                                type="text"
-                                placeholder="TwitterUrl"
-                                autoFocus
-                              />
-                            </Form.Group>
-                          </Form>
-                        </Modal.Body>
-                        <Modal.Footer className="bg-dark text-white">
-                          <Button variant="primary" onClick={handleUser}>
-                            Confirmar
-                          </Button>
-                          {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
-                            : <></>}
-                        </Modal.Footer >
-                      </Modal>
-
                       <div className="pt-1 mb-4">
                         <button className="btn btn-primary" onClick={handleSubmit} type="submit">Sign up</button>
                       </div>

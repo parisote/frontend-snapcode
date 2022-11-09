@@ -56,10 +56,10 @@ function PostEditor(props) {
     var index = event.target.selectedIndex;
     let lang = event.target[index].text
     setLanguage(lang);
-    //monacoRef.current.setModelLanguage(monacoRef.current.getModel(), lang);
     monacoRef.current.updateOptions({
       language: lang
     });
+    window.monaco.editor.setModelLanguage(window.monaco.editor.getModels()[0], lang)
   }
 
   const handleFileNameChange = (event) => {
@@ -93,6 +93,8 @@ function PostEditor(props) {
         fileName: fileName,
         language: language,
       }
+
+      console.log(newPost)
 
       let response = await apiClient.post("/api/post/" + ctx.userId, newPost);
       if (response.status === 201) {

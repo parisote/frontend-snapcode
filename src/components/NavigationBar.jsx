@@ -45,7 +45,7 @@ function NavigationBar(id) {
     }
 
     const navigateHome = (event) => {
-        navigate("/home")
+        navigate("/feed")
     }
 
     const navigateTrending = (event) => {
@@ -79,7 +79,7 @@ function NavigationBar(id) {
     }, [input])
 
     if (!profile) {
-        return <div className='bg-dark min-vh-100'>loading</div>
+        return <></>
     }
 
     return (

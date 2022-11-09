@@ -6,6 +6,8 @@ function ProfileForm(props) {
 
     const { show, handleClose, data } = props
 
+
+
     const handleSubmit = async (event) => {
         event.preventDefault()
         const fData = new FormData(event.currentTarget)
@@ -41,7 +43,7 @@ function ProfileForm(props) {
                             type='name'
                             className="mb-3 bg-dark text-white"
                             name="username"
-                            defaultValue={data.username || ''}
+                            defaultValue={data.username}
                             placeholder="J-Doe"
                             autoFocus
                         />
@@ -54,7 +56,7 @@ function ProfileForm(props) {
                         <Form.Control
                             required
                             type='name'
-                            defaultValue={data.name || ''}
+                            defaultValue={data.name}
                             className="mb-3 bg-dark text-white"
                             name="name"
                             placeholder="Jane doe"
@@ -65,7 +67,7 @@ function ProfileForm(props) {
                         <Form.Label>Biografía</Form.Label>
                         <Form.Control
                             required
-                            defaultValue={data.biography || ''}
+                            defaultValue={data.biography}
                             type='text'
                             className="mb-3 bg-dark text-white"
                             name="biography"
@@ -77,7 +79,7 @@ function ProfileForm(props) {
                         <Form.Label>Lugar de trabajo</Form.Label>
                         <Form.Control
                             required
-                            defaultValue={data.workingAt || ''}
+                            defaultValue={data.workingAt}
                             type='text'
                             className="mb-3 bg-dark text-white"
                             name="workingAt"
@@ -89,7 +91,7 @@ function ProfileForm(props) {
                         <Form.Label>Localidad</Form.Label>
                         <Form.Control
                             required
-                            defaultValue={data.location || ''}
+                            defaultValue={data.location}
                             type='text'
                             className="mb-3 bg-dark text-white"
                             name="location"
@@ -101,7 +103,7 @@ function ProfileForm(props) {
                         <Form.Label>Linkedin</Form.Label>
                         <Form.Control
                             required
-                            defaultValue={data.linkedIn || ''}
+                            defaultValue={data.linkedIn}
                             type='text'
                             className="mb-3 bg-dark text-white"
                             name="linkedin"
@@ -113,7 +115,7 @@ function ProfileForm(props) {
                         <Form.Label>Twitter</Form.Label>
                         <Form.Control
                             required
-                            defaultValue={data.twitter || ''}
+                            defaultValue={data.twitter}
                             type='text'
                             className="mb-3 bg-dark text-white"
                             name="twitter"
