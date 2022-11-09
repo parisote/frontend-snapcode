@@ -3,13 +3,15 @@ import AuthContext from '../context/Auth-context';
 import '../styles/Access.css'
 import { useNavigate } from 'react-router-dom'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Login = () => {
   const ctx = useContext(AuthContext)
   const navigate = useNavigate();
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
   const [error, setError] = useState(false)
-  const [errorMsj, setErrorMsj] = useState()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -34,12 +36,12 @@ const Login = () => {
   }
 
   const handleError = (error) => {
-    setErrorMsj(error)
+    toast.error(error)
     setError(true)
   }
 
   return (
-    <section className="vh-100" style={{ backgroundColor: '#53504F' }}>
+    <section className="overflow-auto vh-100 vw-100" style={{ backgroundColor: '#53504F' }}>
       <div className="container py-5 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
@@ -69,8 +71,7 @@ const Login = () => {
                         <label className="form-label" >Password</label>
                       </div>
 
-                      {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
-                        : <></>}
+                      {error ? <ToastContainer position="bottom-center" autoClose={3000}/> : <></>}
 
                       <div className="pt-1 mb-4">
                         <button className="btn btn-primary" type="submit">Login</button>

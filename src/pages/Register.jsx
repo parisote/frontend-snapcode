@@ -6,17 +6,17 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom"
 import Form from 'react-bootstrap/Form';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Register = () => {
 
   const navigate = useNavigate();
   const [email, setEmail] = useState(null)
-  const [id, setId] = useState(null)
   const [password, setPassword] = useState(null)
   const [confirmPassword, setConfirmPassword] = useState(null)
   const [error, setError] = useState(false)
-  const [errorMsj, setErrorMsj] = useState()
   const [msg, setMsg] = useState(false)
-  const [successMsg, setSuccessMsg] = useState()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -33,18 +33,13 @@ const Register = () => {
     const response = await AuthService.register(email, password);
     if (response.status === 201) {
       const id = response.data.id.toString();
-      handleId(id)
       handleMsg("User created successfully. Welcome aboard!")
       setTimeout(() => {
         navigate('/login')
       }, 3000);
     } else {
-      handleError("An error has occurred, please try again later.")
+      handleError("An error has occurred, please try again later")
     }
-  }
-
-  const handleId = (event) => {
-    setId(event)
   }
 
   const handleEmailChange = (event) => {
@@ -60,16 +55,17 @@ const Register = () => {
   }
 
   const handleMsg = (msg) => {
-    setSuccessMsg(msg)
+    toast.success(msg)
     setMsg(true)
   }
 
   const handleError = (error) => {
-    setErrorMsj(error)
+    toast.error(error)
     setError(true)
   }
+  
   return (
-    <section className="vh-100 " style={{ backgroundColor: '#53504F' }}>
+    <section className="overflow-auto vh-100 vw-100" style={{ backgroundColor: '#53504F' }}>
       <div className="container py-5 h-100 ">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
@@ -104,10 +100,8 @@ const Register = () => {
                         <label className="form-label bg-dark text-white" >Confirm password</label>
                       </div>
 
-                      {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
-                        : <></>}
-                      {msg ? <div class="alert alert-success" role="alert"> {successMsg} </div>
-                        : <></>}
+                      {error || msg? <ToastContainer position="bottom-center" autoClose={3000}/> : <></>}
+
                       <div className="pt-1 mb-4">
                         <button className="btn btn-primary" onClick={handleSubmit} type="submit">Sign up</button>
                       </div>
