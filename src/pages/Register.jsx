@@ -6,6 +6,9 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom"
 import Form from 'react-bootstrap/Form';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Register = () => {
 
   const navigate = useNavigate();
@@ -39,7 +42,7 @@ const Register = () => {
         navigate('/login')
       }, 3000);
     } else {
-      handleError("An error has occurred, please try again later.")
+      handleError("An error has occurred, please try again later")
     }
   }
 
@@ -65,11 +68,12 @@ const Register = () => {
   }
 
   const handleError = (error) => {
-    setErrorMsj(error)
+    toast.error(error)
     setError(true)
   }
+  
   return (
-    <section className="vh-100 " style={{ backgroundColor: '#53504F' }}>
+    <section className="overflow-auto vh-100 vw-100" style={{ backgroundColor: '#53504F' }}>
       <div className="container py-5 h-100 ">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
@@ -104,10 +108,11 @@ const Register = () => {
                         <label className="form-label bg-dark text-white" >Confirm password</label>
                       </div>
 
-                      {error ? <div class="alert alert-danger" role="alert"> {errorMsj} </div>
-                        : <></>}
                       {msg ? <div class="alert alert-success" role="alert"> {successMsg} </div>
                         : <></>}
+
+                      {error? <ToastContainer autoClose={3000}/> : <></>}
+
                       <div className="pt-1 mb-4">
                         <button className="btn btn-primary" onClick={handleSubmit} type="submit">Sign up</button>
                       </div>
