@@ -16,6 +16,7 @@ function ProfileBar(data) {
   const handleShow = () => setShow(true);
 
   const handleClose2 = () => setShow2(false);
+  
   const handleShow2 = () => setShow2(() => {
     if (data.userId === ctx.userId) {
       return true
@@ -73,7 +74,11 @@ function ProfileBar(data) {
   }, [data.userId]);
   const parseFollowers = (res) => {
     const isFollowing = res.data.find(e => e.followingId === ctx.userId)
+    setFollowCount(()=> res.data.length)
     if (isFollowing) setFollowing(() => true)
+    else{
+      setFollowing(() => false)
+    }
   }
 
   return (
