@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import PostView from '../components/PostView';
 import AuthContext from '../context/Auth-context';
 import apiClient from '../services/apiClient';
+import Modal from 'react-bootstrap/Modal';
+
 const Feed = () => {
 
     const ctx = useContext(AuthContext)
@@ -11,6 +13,11 @@ const Feed = () => {
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
     const [posts, setPosts] = useState(null)
+    const [showFilters, setShowFilters] = useState(false)
+
+    const handleCloseFilters = () => setShowFilters(false);
+    const handleShowFilters = () => setShowFilters(true);
+
     let userId
 
     if (!location.state) {
@@ -49,17 +56,48 @@ const Feed = () => {
     }
 
     return (
-        <div className="d-flex align-items-center justify-content-center bg-black text-light min-vh-100">
-            <div className='d-flex align-items-start w-75 min-vh-100'>
-                <div className="col-md-2 mt-2">
-                </div>
-                <div className="col-md-8 mt-8">
-                    {renderPosts()}
-                </div>
-                <div className="col-md-2 mt-2">
+        <>
+            <Modal size="xl" show={showFilters} onHide={handleCloseFilters} backdrop="static" keyboard={false}>
+                    <Modal.Header className="bg-dark text-white" closeButton>
+                        <Modal.Title className="bg-dark text-white" >Apply filters</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className="bg-dark  text-white">
+                        <div className="d-flex align-items-center justify-content-center"> 
+                            <input
+                                type="search"
+                                placeholder="Search by title"
+                                className="me-2 bg-black border-0 rounded text-light w-40 p-2"
+                                aria-label="Search"
+                                size='sm'
+                            />
+                            <label className='text-light'>from</label>
+                            <input type="date" className='m-1 p-2 bg-black border-0 rounded text-light'/>
+                            <label className='text-light'>to</label>
+                            <input type="date" className='m-1 p-2 bg-black border-0 rounded text-light'/>
+                            <button >filter</button>
+                        </div>
+                    </Modal.Body>
+            </Modal>
+            <div className='bg-black text-light'>
+                <button onClick={handleShowFilters} className="btn btn-dark m-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filter-left" viewBox="0 0 16 16">
+                        <path d="M2 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                    filters
+                </button>
+                <div className="d-flex align-items-center justify-content-center min-vh-100">
+                    <div className='d-flex align-items-start w-75 min-vh-100'>
+                        <div className="col-md-2 mt-2">
+                        </div>
+                        <div className="col-md-8 mt-8">
+                            {renderPosts()}
+                        </div>
+                        <div className="col-md-2 mt-2">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
