@@ -14,6 +14,7 @@ const Feed = () => {
     const [profile, setProfile] = useState(null)
     const [posts, setPosts] = useState(null)
     const [showFilters, setShowFilters] = useState(false)
+    const [titleFilter, setTitleFilter] = useState()
 
     const handleCloseFilters = () => setShowFilters(false);
     const handleShowFilters = () => setShowFilters(true);
@@ -40,6 +41,13 @@ const Feed = () => {
         )
     }
 
+    const applyFilters = () => {
+        console.log(titleFilter)
+        handleCloseFilters()
+        apiClient.get(`/api/post/user/feed/filter/${userId}?title=${titleFilter}&from=null&to=null`).then(parsePosts)
+        renderPosts()
+    }
+
     //esto y lo proximo deberia ir idealmente en un hook
     useEffect(() => {
         apiClient.get(`/api/user/${userId}`).then(parseUser)
@@ -59,22 +67,23 @@ const Feed = () => {
         <>
             <Modal size="xl" show={showFilters} onHide={handleCloseFilters} backdrop="static" keyboard={false}>
                     <Modal.Header className="bg-dark text-white" closeButton>
-                        <Modal.Title className="bg-dark text-white" >Apply filters</Modal.Title>
+                        <Modal.Title className="bg-dark text-white" >Filter posts</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className="bg-dark  text-white">
+                    <Modal.Body className="bg-dark text-white">
                         <div className="d-flex align-items-center justify-content-center"> 
                             <input
                                 type="search"
-                                placeholder="Search by title"
+                                placeholder="Filter by title"
                                 className="me-2 bg-black border-0 rounded text-light w-40 p-2"
                                 aria-label="Search"
                                 size='sm'
+                                onChange={(e) => setTitleFilter(e.target.value)}
                             />
                             <label className='text-light'>from</label>
                             <input type="date" className='m-1 p-2 bg-black border-0 rounded text-light'/>
                             <label className='text-light'>to</label>
                             <input type="date" className='m-1 p-2 bg-black border-0 rounded text-light'/>
-                            <button >filter</button>
+                            <button onClick={applyFilters} className="btn btn-dark m-2 border-secondary">Apply</button>
                         </div>
                     </Modal.Body>
             </Modal>
