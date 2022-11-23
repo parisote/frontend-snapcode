@@ -11,6 +11,7 @@ import PostEditor from './PostEditor';
 import PostMedia from './PostMedia';
 import apiClient from '../services/apiClient';
 import truncarString from '../utils/stringUtils';
+import { Button } from 'react-bootstrap';
 
 function NavigationBar(id) {
 
@@ -125,16 +126,19 @@ function NavigationBar(id) {
                     </Nav>
                     <Nav>
                         <div className="d-flex align-items-center text-white text-decoration-none">
-                            <Dropdown drop='down' align={{ lg: 'end' }} >
+                            <Button align={{ lg: 'end' }} onClick={handleShowPost}>New post</Button>
+                            
+                            {/* <Dropdown drop='down' align={{ lg: 'end' }} >
                                 <Dropdown.Toggle id="user-menu" variant="black text-white">
                                     New
-                                </Dropdown.Toggle>
+                                </Dropdown.Toggle>    
                                 <Dropdown.Menu variant="dark">
                                     <Dropdown.Item onClick={handleShowPost}>Code post</Dropdown.Item>
                                     <Dropdown.Divider />
                                     <Dropdown.Item onClick={handleShowMedia}>Media post</Dropdown.Item>
                                 </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown> */}
+                            
                         </div>
                         <div className="d-flex align-items-center text-white text-decoration-none">
 
