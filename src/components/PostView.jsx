@@ -139,6 +139,7 @@ function PostView(props) {
               scrollbar: {
                 vertical: 'hidden'
               },
+              readOnly: true,
               overviewRulerBorder: false
             }}
             onChange={handleEditorChange}
