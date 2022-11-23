@@ -4,6 +4,8 @@ import PostView from '../components/PostView';
 import AuthContext from '../context/Auth-context';
 import apiClient from '../services/apiClient';
 import Modal from 'react-bootstrap/Modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Feed = () => {
 
@@ -18,6 +20,7 @@ const Feed = () => {
     const [fromFilter, setFromFilter] = useState()
     const [toFilter, setToFilter] = useState()
     const [isFiltered, setIsFiltered] = useState(false)
+    const [dateError, setDateError] = useState(false)
 
 
     const handleCloseFilters = () => setShowFilters(false);
@@ -51,11 +54,20 @@ const Feed = () => {
     }
 
     const applyFilters = () => {
-        (!titleFilter && !fromFilter && !toFilter) ? setIsFiltered(false) : setIsFiltered(true)
+        if (fromFilter && toFilter && new Date(fromFilter).getTime() > new Date(toFilter).getTime()){
+            handleError("From Cannot be greater than To")
+            return
+        } 
+        (!titleFilter && !fromFilter && !toFilter) ? setIsFiltered(false) : setIsFiltered(true)     
         handleCloseFilters()
         apiClient.get(`/api/post/user/feed/filter/${userId}?title=${titleFilter}&from=${fromFilter}&to=${toFilter}`).then(parsePosts)
         renderPosts()
     }
+
+    const handleError = (error) => {
+        toast.error(error)
+        setDateError(true)
+      }
 
     const clearFilters = () => {
         setIsFiltered(false)
@@ -88,19 +100,22 @@ const Feed = () => {
                             <input
                                 type="search"
                                 placeholder="Filter by title"
-                                className="me-2 bg-black border-0 rounded text-light w-40 p-2"
+                                className="me-2 bg-light border-0 rounded text-dark w-40 p-2"
                                 aria-label="Search"
                                 size='sm'
                                 onChange={(e) => setTitleFilter(e.target.value.trim())}
                             />
                             <label className='text-light'>from</label>
-                            <input onChange={(e) => setFromFilter(e.target.value)} type="date" className='m-1 p-2 bg-black border-0 rounded text-light'/>
+                            <input onChange={(e) => setFromFilter(e.target.value)} type="date" className='m-1 p-2 bg-light text-dark border-0 rounded text-light'/>
                             <label className='text-light'>to</label>
-                            <input onChange={(e) => setToFilter(e.target.value)} type="date" className='m-1 p-2 bg-black border-0 rounded text-light'/>
+                            <input onChange={(e) => setToFilter(e.target.value)} type="date" className='m-1 p-2 bg-light text-dark border-0 rounded text-light'/>
                             <button onClick={applyFilters} className="btn btn-dark m-2 border-secondary">Apply</button>
                         </div>
                     </Modal.Body>
             </Modal>
+
+            {dateError ? <ToastContainer position="bottom-center" autoClose={3000}/> : <></>}
+
             <div className='bg-black text-light'>
                 <button onClick={handleShowFilters} className="btn btn-dark m-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filter-left mx-1" viewBox="0 0 16 16">
